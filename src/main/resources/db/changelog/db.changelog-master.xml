@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd">
+
+    <preConditions>
+        <runningAs username="antont"/>
+    </preConditions>
+
+    <changeSet id="1" author="antont">
+        <createTable tableName="user_roles">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="users">
+            <column name="username" type="varchar(30)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role_id" type="int">
+                <constraints nullable="false" foreignKeyName="user_user_role" references="user_roles(id)"/>
+            </column>
+            <column name="first_name" type="varchar(30)"/>
+            <column name="last_name" type="varchar(30)"/>
+            <column name="password" type="varchar(30)"/>
+        </createTable>
+        <createTable tableName="animal_type">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="varchar(30)"/>
+        </createTable>
+        <createTable tableName="pets">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner" type="varchar(30)">
+                <constraints nullable="false" foreignKeyName="pet_user" references="users(username)"/>
+            </column>
+            <column name="type" type="int">
+                <constraints nullable="false" foreignKeyName="pet_animal_type" references="animal_type(id)"/>
+            </column>
+        </createTable>
+        <createTable tableName="animal_type">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="pet_id" type="int">
+                <constraints nullable="false" foreignKeyName="visit_animal" references="pets(id)"/>
+            </column>
+            <column name="doctor_id" type="varchar(30)">
+                <constraints nullable="false" foreignKeyName="visit_doctor" references="users(username)"/>
+            </column>
+            <column name="issue" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+<!--    <changeSet id="2" author="nvoxland">-->
+<!--        <addColumn tableName="person">-->
+<!--            <column name="username" type="varchar(8)"/>-->
+<!--        </addColumn>-->
+<!--    </changeSet>-->
+<!--    <changeSet id="3" author="nvoxland">-->
+<!--        <addLookupTable-->
+<!--                existingTableName="person" existingColumnName="state"-->
+<!--                newTableName="state" newColumnName="id" newColumnDataType="char(2)"/>-->
+<!--    </changeSet>-->
+
+</databaseChangeLog>
