@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <preConditions>
+<preConditions>
         <runningAs username="antont"/>
     </preConditions>
 
@@ -16,6 +14,7 @@
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false" unique="true"/>
             </column>
+            <column name="name" type="varchar(30)"/>
         </createTable>
         <createTable tableName="users">
             <column name="username" type="varchar(30)">
@@ -32,7 +31,7 @@
             <column name="id" type="int">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="type" type="varchar(30)"/>
+            <column name="name" type="varchar(30)"/>
         </createTable>
         <createTable tableName="pets">
             <column name="id" type="int" autoIncrement="true">
@@ -48,7 +47,7 @@
                 <constraints nullable="false" foreignKeyName="pet_animal_type" references="animal_type(id)"/>
             </column>
         </createTable>
-        <createTable tableName="animal_type">
+        <createTable tableName="visits">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -63,16 +62,4 @@
             </column>
         </createTable>
     </changeSet>
-
-<!--    <changeSet id="2" author="nvoxland">-->
-<!--        <addColumn tableName="person">-->
-<!--            <column name="username" type="varchar(8)"/>-->
-<!--        </addColumn>-->
-<!--    </changeSet>-->
-<!--    <changeSet id="3" author="nvoxland">-->
-<!--        <addLookupTable-->
-<!--                existingTableName="person" existingColumnName="state"-->
-<!--                newTableName="state" newColumnName="id" newColumnDataType="char(2)"/>-->
-<!--    </changeSet>-->
-
 </databaseChangeLog>
