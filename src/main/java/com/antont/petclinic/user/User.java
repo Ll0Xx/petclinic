@@ -2,10 +2,17 @@ package com.antont.petclinic.user;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
+@NamedEntityGraph(
+        name = "users.role",
+        attributeNodes = @NamedAttributeNode("role")
+)
 @Entity
 @Table(name = "users")
 public class User {
+
+    private boolean active;
 
     @Id
     public String getUsername() {
@@ -17,18 +24,17 @@ public class User {
         this.username = username;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private UserRole role;
+    @OneToMany(mappedBy = "role_id")
+//    @JoinColumn(name = "role_id")
+    private Set<UserRole> role;
 
-    public UserRole getType() {
-        return this.role;
+    public Set<UserRole> getRoles() {
+        return role;
     }
 
-    public void setType(UserRole type) {
-        this.role = type;
+    public void setRoles(Set<UserRole> roles) {
+        this.role = roles;
     }
-
     @Column(name = "first_name")
     @NotEmpty
     private String firstName;
@@ -63,6 +69,19 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean hasRole(UserRole roleName) {
+        return role.stream()
+                .anyMatch(commonRole -> commonRole.getName().equals(roleName));
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
 }
