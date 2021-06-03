@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Spring Boot Thymeleaf + Spring Security</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/static/css/main.css" th:href="@{/css/main.css}"/>
 </head>
 <body>
-<h1>main page</h1>
+
+<div class="container">
+
+    <div class="starter-template">
+        <h1>Spring Boot Web Thymeleaf + Spring Security</h1>
+        <h2>1. Посетите <a th:href="@{/admin}">страницу Admin (Защищено с помошью Spring Security, нужны права
+            Администратора(Admin Role))</a></h2>
+        <h2>2. Посетите <a th:href="@{/user}">страницу User (Защищено с помошью Spring Security, нужны права
+            пользователя(User Role))</a></h2>
+    </div>
+
+</div>
 </body>
 </html>
