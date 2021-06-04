@@ -5,10 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-<preConditions>
-        <runningAs username="antont"/>
-    </preConditions>
-
     <changeSet id="1" author="antont">
         <createTable tableName="user_roles">
             <column name="id" type="int" autoIncrement="true">
@@ -20,12 +16,23 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
             <column name="username" type="varchar(30)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="role_id" type="int">
-                <constraints nullable="false" foreignKeyName="user_user_role" references="user_roles(id)"/>
-            </column>
             <column name="first_name" type="varchar(30)"/>
             <column name="last_name" type="varchar(30)"/>
             <column name="password" type="varchar(30)"/>
+        </createTable>
+        <createTable tableName="user_user_roles">
+            <column name="username" type="varchar(30)">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             foreignKeyName="users_roles_fk"
+                             references="users(username)"/>
+            </column>
+            <column name="role_id" type="int">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             foreignKeyName="roles_users_fk"
+                             references="user_roles(id)"/>
+            </column>
         </createTable>
         <createTable tableName="animal_type">
             <column name="id" type="int">

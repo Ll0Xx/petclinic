@@ -2,42 +2,59 @@ package com.antont.petclinic.user;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
 import java.util.Set;
 
 @NamedEntityGraph(
         name = "users.role",
-        attributeNodes = @NamedAttributeNode("role")
+        attributeNodes = @NamedAttributeNode("roles")
 )
 @Entity
 @Table(name = "users")
 public class User {
 
+    @Id
+    private String username;
+
     private boolean active;
 
-    @Id
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_user_roles",
+            joinColumns = @JoinColumn(name = "username"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<UserRole> roles = new HashSet<>();
+
+    @Column(name = "first_name")
+    @NotEmpty
+    private String firstName;
+
+    @Column(name = "last_name")
+    @NotEmpty
+    private String lastName;
+
+    @Column(name = "password")
+    @NotEmpty
+    private String password;
+
+    public User() {
+    }
+
     public String getUsername() {
         return username;
     }
-    private String username;
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    @OneToMany(mappedBy = "role_id")
-//    @JoinColumn(name = "role_id")
-    private Set<UserRole> role;
-
     public Set<UserRole> getRoles() {
-        return role;
+        return roles;
     }
 
     public void setRoles(Set<UserRole> roles) {
-        this.role = roles;
+        this.roles = roles;
     }
-    @Column(name = "first_name")
-    @NotEmpty
-    private String firstName;
 
     public String getFirstName() {
         return this.firstName;
@@ -47,10 +64,6 @@ public class User {
         this.firstName = firstName;
     }
 
-    @Column(name = "last_name")
-    @NotEmpty
-    private String lastName;
-
     public String getLastName() {
         return this.lastName;
     }
@@ -58,10 +71,6 @@ public class User {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-    @Column(name = "password")
-    @NotEmpty
-    private String password;
 
     public String getPassword() {
         return this.password;
@@ -72,8 +81,8 @@ public class User {
     }
 
     public boolean hasRole(UserRole roleName) {
-        return role.stream()
-                .anyMatch(commonRole -> commonRole.getName().equals(roleName));
+        return roles.stream()
+                .anyMatch(commonRole -> commonRole.getName().equals(roleName.getName()));
     }
 
     public boolean isActive() {
