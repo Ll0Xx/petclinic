@@ -1,6 +1,5 @@
 package com.antont.petclinic.security;
 
-import com.antont.petclinic.exception.NotFoundExceptions;
 import com.antont.petclinic.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -18,7 +18,12 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
             </column>
             <column name="first_name" type="varchar(30)"/>
             <column name="last_name" type="varchar(30)"/>
-            <column name="password" type="varchar(30)"/>
+            <column name="password" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <createTable tableName="user_user_roles">
             <column name="username" type="varchar(30)">
