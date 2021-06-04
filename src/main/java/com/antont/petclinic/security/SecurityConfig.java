@@ -1,8 +1,5 @@
 package com.antont.petclinic.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/index", "/about").permitAll()
+                .antMatchers("/", "/index", "/about", "/login", "/signup").permitAll()
+                .antMatchers("/signup").not().fullyAuthenticated()
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("USER")
                 .anyRequest().authenticated()
@@ -56,15 +54,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
-        auth.inMemoryAuthentication()
-                .withUser("user").password(passwordEncoder().encode("password")).roles("USER")
-                .and()
-                .withUser("admin").password(passwordEncoder().encode("admin")).roles("ADMIN");
     }
 
     @Bean
