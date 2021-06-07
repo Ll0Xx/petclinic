@@ -1,21 +1,23 @@
 package com.antont.petclinic.security.registration;
 
-import com.antont.petclinic.user.User;
-import com.antont.petclinic.user.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.antont.petclinic.security.registration.excepsion.UserAlreadyExistException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.context.request.WebRequest;
+
+import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
 
-    private final UserRepository userRepo;
+    private final UserService userService;
 
-    public RegistrationController(UserRepository userRepo) {
-        this.userRepo = userRepo;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/signup")
@@ -25,14 +27,21 @@ public class RegistrationController {
         return "signup";
     }
 
-    @PostMapping("/process_register")
-    public String processRegister(User user) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-
-        userRepo.save(user);
-
-        return "register_success";
+    @PostMapping
+    public String userRegistration(@ModelAttribute("user") @Valid UserDto userDto, final BindingResult bindingResult, final Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("registrationForm", userDto);
+            return "signup";
+        }
+        try {
+            userService.register(userDto);
+        }catch (UserAlreadyExistException e){
+            bindingResult.rejectValue("username", "userData.username",
+                    "An account already exists");
+            model.addAttribute("registrationForm", userDto);
+            return "signup";
+        }
+        model.addAttribute("registrationMsg", "user.registration.verification.email.msg");
+        return "signup";
     }
 }
