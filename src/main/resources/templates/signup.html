@@ -4,7 +4,7 @@
 <form action="/" th:object="${user}" method="POST" enctype="utf8">
     <div>
         <label th:text="#{label.user.username}">username</label>
-        <input type="email" th:field="*{username}"/>
+        <input type="text" th:field="*{username}"/>
         <p th:each="error : ${#fields.errors('username')}"
            th:text="${error}">Validation error</p>
     </div>
