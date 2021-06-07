@@ -3,12 +3,13 @@
 <head>
     <title>Spring Boot Thymeleaf + Spring Security</title>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" href="/static/css/main.css" th:href="@{/css/main.css}"/>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.4.1-1/css/bootstrap.min.css} "/>
+    <div th:replace="fragments/header :: header-css"></div>
 </head>
 <body>
 
-<div class="container">
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container" style="margin-top: 5em">
 
     <div class="starter-template">
         <h1>Spring Boot Web Thymeleaf + Spring Security</h1>
@@ -17,9 +18,6 @@
         <h2>2. Посетите <a th:href="@{/user}">страницу User (Защищено с помошью Spring Security, нужны права
             пользователя(User Role))</a></h2>
     </div>
-
-    <a th:href="@{/signup}">Create account</a>
-
 </div>
 </body>
 </html>
