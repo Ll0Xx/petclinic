@@ -1,10 +1,13 @@
 package com.antont.petclinic.security;
 
+import com.antont.petclinic.user.User;
 import com.antont.petclinic.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserPrincipalDetailsService implements UserDetailsService {
@@ -16,11 +19,11 @@ public class UserPrincipalDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findUserByUsername(username)
-                .map(AuthenticatedUser::new)
-                .orElseThrow(() -> new com.antont.petclinic.exception.NotFoundExceptions("NotFound.userDetailsService.loadUser",
-                        "User not found with username ${username}, in UserPrincipalDetailsService.class",
-                        new Object[]{username}));
+    public UserDetails loadUserByUsername(final String username) {
+        final Optional<User> appUser = userRepository.findUserByUsername(username);
+        if (appUser.isEmpty()) {
+            throw new UsernameNotFoundException(username);
+        }
+        return new AuthenticatedUser(appUser.orElseThrow());
     }
 }
