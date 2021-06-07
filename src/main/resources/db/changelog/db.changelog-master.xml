@@ -18,7 +18,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
             </column>
             <column name="first_name" type="varchar(30)"/>
             <column name="last_name" type="varchar(30)"/>
-            <column name="password" type="varchar(30)">
+            <column name="password" type="varchar(200)">
                 <constraints nullable="false"/>
             </column>
             <column name="active" type="BOOLEAN" defaultValueBoolean="true">
