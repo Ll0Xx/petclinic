@@ -1,10 +1,8 @@
 package com.antont.petclinic;
 
-import com.antont.petclinic.pet.Pet;
-import com.antont.petclinic.pet.PetService;
+import com.antont.petclinic.pet.*;
 import com.antont.petclinic.security.AuthenticatedUser;
 import com.antont.petclinic.security.CurrentUserService;
-import com.antont.petclinic.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -20,12 +18,14 @@ import java.util.stream.IntStream;
 @Controller
 public class MainController {
 
-    private PetService petService;
-    private CurrentUserService currentUserService;
+    private final PetService petService;
+    private final CurrentUserService currentUserService;
+    private final PetTypeRepository petTypeRepository;
 
-    public MainController(PetService petService, CurrentUserService currentUserService) {
+    public MainController(PetService petService, CurrentUserService currentUserService, PetTypeRepository petTypeRepository) {
         this.petService = petService;
         this.currentUserService = currentUserService;
+        this.petTypeRepository = petTypeRepository;
     }
 
     @GetMapping(value = {"/", "/index"})
@@ -45,6 +45,13 @@ public class MainController {
             @RequestParam("size") Optional<Integer> size) {
         AuthenticatedUser user = currentUserService.getCurrentUser();
         model.addAttribute("user", user);
+
+        List<PetType> petTypes = petTypeRepository.getAll();
+        model.addAttribute("petTypes", petTypes);
+
+        PetDto petDto = new PetDto();
+        model.addAttribute("pet", petDto);
+
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 

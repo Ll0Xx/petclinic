@@ -18,6 +18,25 @@
             </form>
         </div>
 
+        <div class="position-relative" style="margin-top: 100px">
+            <form  th:action="@{/pets}" th:object="${pet}" method="post" class="form-inline col-9 m-auto d-flex justify-content-center" >
+                <div class="form-group">
+                    <input type="text" name="name" id="name" th:field="*{name}"
+                           class="form-control input-lg"
+                           placeholder="UserName" required="true" autofocus="true"/>
+                    <p class="text-danger" th:each="error : ${#fields.errors('name')}"
+                       th:text="${error}">Validation error</p>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" th:field="*{type}"  id="dropOperator">
+                        <option value="0">select operator</option>
+                        <option th:each="operator : ${petTypes}" th:value="${petTypes.id}" th:text="${petTypes.name}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Add pet</button>
+            </form>
+        </div>
+
         <table border="1">
             <thead>
             <tr>

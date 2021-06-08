@@ -10,21 +10,44 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 public class PetService {
 
-    private PetRepository petRepository;
     private final CurrentUserService currentUserService;
     private final UserRepository userRepository;
+    private final PetTypeRepository petTypeRepository;
+    private PetRepository petRepository;
 
 
-    public PetService(PetRepository petRepository, CurrentUserService currentUserService, UserRepository userRepository) {
+    public PetService(PetRepository petRepository, CurrentUserService currentUserService, UserRepository userRepository, PetTypeRepository roleRepository) {
         this.petRepository = petRepository;
         this.currentUserService = currentUserService;
         this.userRepository = userRepository;
+        this.petTypeRepository = roleRepository;
+    }
+
+    public List<Pet> findAllPetsByOwner(Pageable pageable) {
+        AuthenticatedUser user = currentUserService.getCurrentUser();
+        User owner = userRepository.findUserByUsername(user.getUsername()).orElseThrow();
+
+        return new ArrayList<>(petRepository.findAllByOwner(pageable, owner));
+    }
+
+    public void addPet(PetDto petDto) {
+        AuthenticatedUser user = currentUserService.getCurrentUser();
+        User owner = userRepository.findUserByUsername(user.getUsername()).orElseThrow();
+
+        Pet pet = new Pet();
+        pet.setName(petDto.getName());
+        PetType type = petTypeRepository.findByName(petDto.getType().name()).orElseThrow();
+        pet.setType(type);
+        pet.setOwner(owner);
+
+        petRepository.save(pet);
     }
 
     public Page<Pet> findPaginated(Pageable pageable) {
