@@ -1,19 +1,46 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>User Page</title>
+    <div th:replace="fragments/header :: header-css"></div>
 </head>
 <body>
 
-<div class="container">
+<div th:replace="fragments/header :: header"></div>
 
-    <div class="starter-template">
-        <h1>User page (Spring Security protected)</h1>
-        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-        </form>
+<div class="container-fluid text-center">
+    <div class="row" style="margin-top:5em">
+
+        <div class="starter-template">
+            <h1 th:inline="text">Hello [[${user.username}]]!</h1>
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out"/>
+            </form>
+        </div>
+
+        <table border="1">
+            <thead>
+            <tr>
+                <th th:text="#{msg.id}"/>
+                <th th:text="#{msg.name}"/>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book, iStat : ${bookPage.content}"
+                th:style="${iStat.odd}? 'font-weight: bold;'"
+                th:alt-title="${iStat.even}? 'even' : 'odd'">
+                <td th:text="${book.id}"/>
+                <td th:text="${book.name}"/>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${bookPage.totalPages > 0}" class="pagination"
+             th:each="pageNumber : ${pageNumbers}">
+            <a th:href="@{/listBooks(size=${bookPage.size}, page=${pageNumber})}"
+               th:text=${pageNumber}
+               th:class="${pageNumber==bookPage.number + 1} ? active"></a>
+        </div>
     </div>
-
 </div>
 
 </body>

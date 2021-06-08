@@ -22,7 +22,14 @@
                     <a class="nav-link" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
-            <a th:href="@{/login}" class="btn btn-lg btn-secondary">Sign In</a>
+            <div class="d-flex justify-content-between" th:if="${#httpServletRequest.remoteUser}">
+                <a th:text="${#httpServletRequest.remoteUser}" th:href="@{/user}" class="btn btn-lg btn-outline-light" style="border: 0"></a>
+                <a th:href="@{/logout}" class="btn btn-lg btn-secondary">Log Out</a>
+            </div>
+            <div th:unless="${#httpServletRequest.remoteUser}">
+                <a th:href="@{/login}" class="btn btn-lg btn-secondary">Sign In</a>
+            </div>
+
         </div>
     </nav>
 </div>
