@@ -1,26 +1,37 @@
 package com.antont.petclinic.security.registration;
 
-import org.springframework.lang.UsesSunHttpServer;
+import com.antont.petclinic.security.registration.validation.FieldsValueMatch;
+import com.antont.petclinic.security.registration.validation.NameConstraint;
+import com.antont.petclinic.security.registration.validation.PasswordConstraint;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+@FieldsValueMatch.List({
+        @FieldsValueMatch(
+                field = "password",
+                fieldMatch = "matchingPassword"
+        )
+})
 public class UserDto {
-    @NotNull
-    @NotEmpty
+
+    @NameConstraint()
+    @Size(min = 3, max = 20)
     private String username;
 
-    @NotNull
-    @NotEmpty
+    @NameConstraint()
+    @Size(min = 3, max = 20)
     private String firstName;
 
-    @NotNull
-    @NotEmpty
+    @NameConstraint
+    @Size(min = 3, max = 20)
     private String lastName;
 
-    @NotNull
-    @NotEmpty
+    @PasswordConstraint
+    @Size(min = 5, max = 20)
     private String password;
+
+    @PasswordConstraint
+    @Size(min = 5, max = 20)
     private String matchingPassword;
 
 
