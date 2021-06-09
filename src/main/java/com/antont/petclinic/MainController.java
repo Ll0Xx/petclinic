@@ -46,7 +46,7 @@ public class MainController {
         AuthenticatedUser user = currentUserService.getCurrentUser();
         model.addAttribute("user", user);
 
-        List<PetType> petTypes = petTypeRepository.getAll();
+        List<PetType> petTypes = petTypeRepository.findAll();
         model.addAttribute("petTypes", petTypes);
 
         PetDto petDto = new PetDto();
@@ -55,11 +55,11 @@ public class MainController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 
-        Page<Pet> bookPage = petService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+        Page<Pet> petsPage = petService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
 
-        model.addAttribute("bookPage", bookPage);
+        model.addAttribute("petsPage", petsPage);
 
-        int totalPages = bookPage.getTotalPages();
+        int totalPages = petsPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()

@@ -7,8 +7,7 @@ public class PetDto {
     @NotNull
     private String name;
 
-    @NotNull
-    private PetTypeNames type;
+    private String type;
 
     public String getName() {
         return name;
@@ -18,11 +17,11 @@ public class PetDto {
         this.name = name;
     }
 
-    public PetTypeNames getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(PetTypeNames type) {
+    public void setType(String type) {
         this.type = type;
     }
 }

@@ -34,7 +34,7 @@ public class PetService {
         AuthenticatedUser user = currentUserService.getCurrentUser();
         User owner = userRepository.findUserByUsername(user.getUsername()).orElseThrow();
 
-        return new ArrayList<>(petRepository.findAllByOwner(pageable, owner));
+        return new ArrayList<>(petRepository.findAllByOwner(owner));
     }
 
     public void addPet(PetDto petDto) {
@@ -43,7 +43,8 @@ public class PetService {
 
         Pet pet = new Pet();
         pet.setName(petDto.getName());
-        PetType type = petTypeRepository.findByName(petDto.getType().name()).orElseThrow();
+        Integer petTypeId = Integer.valueOf(petDto.getType());
+        PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
         pet.setType(type);
         pet.setOwner(owner);
 
@@ -53,22 +54,22 @@ public class PetService {
     public Page<Pet> findPaginated(Pageable pageable) {
         AuthenticatedUser user = currentUserService.getCurrentUser();
         User petOwner = userRepository.findUserByUsername(user.getUsername()).orElseThrow();
-        List<Pet> books = petRepository.findAllByOwner(pageable, petOwner);
+        List<Pet> pets = petRepository.findAllByOwner(petOwner);
 
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
         List<Pet> list;
 
-        if (books.size() < startItem) {
+        if (pets.size() < startItem) {
             list = Collections.emptyList();
         } else {
-            int toIndex = Math.min(startItem + pageSize, books.size());
-            list = books.subList(startItem, toIndex);
+            int toIndex = Math.min(startItem + pageSize, pets.size());
+            list = pets.subList(startItem, toIndex);
         }
 
         Page<Pet> PetsPage
-                = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), books.size());
+                = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), pets.size());
 
         return PetsPage;
     }
