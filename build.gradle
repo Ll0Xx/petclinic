@@ -32,11 +32,12 @@ dependencies {
     implementation 'org.webjars:bootstrap:4.4.1-1'
     implementation 'org.webjars:jquery:3.6.0'
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'mysql:mysql-connector-java'
+
+    //tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'junit:junit:4.13.1'
 }
 
 test {

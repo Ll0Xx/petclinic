@@ -35,5 +35,6 @@ public class LoginAuthenticationFailureHandler implements AuthenticationFailureH
 
         response.getOutputStream()
                 .println(objectMapper.writeValueAsString(data));
+        response.sendRedirect("/login?error=true");
     }
 }

@@ -40,6 +40,15 @@ public class User {
     public User() {
     }
 
+    public User(String username, boolean active, Set<UserRole> roles, String firstName, String lastName, String password) {
+        this.username = username;
+        this.active = active;
+        this.roles = roles;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }
