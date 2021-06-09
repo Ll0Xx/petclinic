@@ -10,32 +10,37 @@
 
 <div class="container-fluid text-center">
     <div class="row" style="margin-top:5em">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3"
+             style="max-width: 800px; margin: 0 auto;">
+            <form th:action="@{/pets}" th:object="${pet}" method="post">
+                <fieldset>
+                    <h1 th:inline="text">Hello [[${user.username}]]!</h1>
 
-        <div class="starter-template">
-            <h1 th:inline="text">Hello [[${user.username}]]!</h1>
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Sign Out"/>
-            </form>
-        </div>
+                    <div class="row" style="margin-top: 2em">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-4">
+                            <input type="text" name="name" id="name" th:field="*{name}"
+                                   class="form-control input-lg"
+                                   placeholder="UserName" required="true" autofocus="true"/>
+                            <p class="text-danger" th:each="error : ${#fields.errors('name')}"
+                               th:text="${error}">Validation error</p>
+                        </div>
 
-        <div class="position-relative" style="margin-top: 100px">
-            <form  th:action="@{/pets}" th:object="${pet}" method="post" class="form-inline col-9 m-auto d-flex justify-content-center" >
-                <div class="form-group">
-                    <input type="text" name="name" id="name" th:field="*{name}"
-                           class="form-control input-lg"
-                           placeholder="UserName" required="true" autofocus="true"/>
-                    <p class="text-danger" th:each="error : ${#fields.errors('name')}"
-                       th:text="${error}">Validation error</p>
-                </div>
-                <div class="form-group">
-                    <select class="form-control" th:field="*{type}"  id="dropOperator">
-                        <option value="0">select operator</option>
-                        <option th:each="operator : ${petTypes}" th:value="${petTypes.id}" th:text="${petTypes.name}"></option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary mb-2">Add pet</button>
+
+                        <div class="form-group col-xs-4 col-sm-4 col-md-4">
+                            <select class="form-control" th:field="*{type}" id="dropOperator">
+                                <option value="0">Select pet Type</option>
+                                <option th:each="operator : ${petTypes}" th:value="${operator.id}"
+                                        th:text="${operator.name}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <button type="submit" class="btn btn-primary btn-block">Add pet</button>
+                        </div>
+                    </div>
+
+                </fieldset>
             </form>
-        </div>
 
         <table border="1">
             <thead>
@@ -61,6 +66,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>
