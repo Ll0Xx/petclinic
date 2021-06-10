@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.access.AccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -49,29 +48,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/perform_login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/login?error=true")
-                .failureHandler(failureHandler())
                 .permitAll()
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
-                .permitAll()
-                .and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-    }
-
-    @Bean
-    public LoginAuthenticationFailureHandler failureHandler() {
-        return new LoginAuthenticationFailureHandler();
+                .permitAll();
     }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new CustomAccessDeniedHandler();
-    }
-
 }

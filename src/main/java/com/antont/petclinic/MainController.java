@@ -43,7 +43,7 @@ public class MainController {
             Model model,
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size) {
-        AuthenticatedUser user = currentUserService.getCurrentUser();
+        String user = currentUserService.getCurrentUserName();
         model.addAttribute("user", user);
 
         List<PetType> petTypes = petTypeRepository.findAll();
@@ -69,9 +69,4 @@ public class MainController {
 
         return "/user";
     }
-
-//    @GetMapping("/user")
-//    public String user() {
-//        return "/user";
-//    }
 }

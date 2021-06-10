@@ -5,7 +5,6 @@ import com.antont.petclinic.user.RoleRepository;
 import com.antont.petclinic.user.User;
 import com.antont.petclinic.user.UserRepository;
 import com.antont.petclinic.user.UserRole;
-import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,22 +29,32 @@ public class CustomUserService implements UserService {
         if (checkIfUserExist(userDto.getUsername())) {
             throw new UserAlreadyExistException("User already exists for this email");
         }
-        User user = new User();
+
         UserRole role = roleRepository.findByName("USER").orElseThrow();
 
-        BeanUtils.copyProperties(userDto, user);
+        User user = initializeUserFromDto(userDto, role);
+        userRepository.save(user);
+    }
+
+    private User initializeUserFromDto(UserDto userDto, UserRole role) {
+        User user = new User();
+
+        user.setUsername(userDto.getUsername());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
         user.setRoles(Set.of(role));
         user.setActive(true);
-        encodePassword(user);
-        userRepository.save(user);
+        encodePassword(userDto, user);
+
+        return user;
     }
 
     @Override
     public boolean checkIfUserExist(String email) {
-        return userRepository.findUserByUsername(email).isPresent();
+        return userRepository.existsById(email);
     }
 
-    private void encodePassword(User userEntity) {
-        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+    private void encodePassword(UserDto userDto, User userEntity) {
+        userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
     }
 }

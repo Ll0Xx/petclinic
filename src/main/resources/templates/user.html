@@ -14,7 +14,7 @@
              style="max-width: 800px; margin: 0 auto;">
             <form th:action="@{/pets}" th:object="${pet}" method="post">
                 <fieldset>
-                    <h1 th:inline="text">Hello [[${user.username}]]!</h1>
+                    <h1 th:inline="text">Hello [[${user}]]!</h1>
 
                     <div class="row" style="margin-top: 2em">
                         <div class="form-group col-xs-6 col-sm-6 col-md-4">
