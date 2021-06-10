@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, String> {
 
     @EntityGraph(value = "users.roles", attributePaths = {"roles"})
     Optional<User> findUserByUsername(String username);
