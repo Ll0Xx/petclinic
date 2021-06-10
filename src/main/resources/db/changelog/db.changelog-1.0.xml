@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet author="antont" id="rename-table-visits">
+        <renameTable newTableName="issue" oldTableName="visits" schemaName="petclinic"/>
+        <renameColumn columnDataType="varchar(100)" newColumnName="description" oldColumnName="issue"
+                      schemaName="petclinic" tableName="issue"/>
+        <addColumn tableName="issue" schemaName="petclinic">
+            <column name="date" type="date"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

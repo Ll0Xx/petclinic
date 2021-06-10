@@ -1,17 +1,16 @@
 package com.antont.petclinic.visit;
 
+import com.antont.petclinic.model.BaseEntity;
 import com.antont.petclinic.pet.Pet;
 import com.antont.petclinic.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.sql.Date;
 
 @Entity
-@Table(name = "visits")
-public class Visit {
-
-    @Id
-    private Integer id;
+@Table(name = "issue")
+public class Issue extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "pet_id")
@@ -21,11 +20,14 @@ public class Visit {
     @JoinColumn(name = "doctor_id")
     private User doctor;
 
-    @Column(name = "issue")
+    @Column(name = "description")
     @NotEmpty
     private String issue;
 
-    public Visit() {
+    @Column(name = "date")
+    private Date date;
+
+    public Issue() {
     }
 
     public Pet getPet() {
@@ -52,11 +54,11 @@ public class Visit {
         this.issue = issue;
     }
 
-    public Integer getId() {
-        return id;
+    public Date getDate() {
+        return date;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
