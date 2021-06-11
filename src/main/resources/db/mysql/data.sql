@@ -1,6 +1,6 @@
-INSERT INTO `user_roles` (`id`, `name`) VALUES (1, 'admin');
-INSERT INTO `user_roles` (`id`, `name`) VALUES (2, 'doctor');
-INSERT INTO `user_roles` (`id`, `name`) VALUES (3, 'user');
+INSERT INTO `user_roles` (`id`, `name`) VALUES (1, 'ADMIN');
+INSERT INTO `user_roles` (`id`, `name`) VALUES (2, 'DOCTOR');
+INSERT INTO `user_roles` (`id`, `name`) VALUES (3, 'USER');
 
 INSERT INTO `users` (`username`, `first_name`, `last_name`, `password`) VALUES ('ali32', 'Brisa', 'Collins', 'f691e20a33798d476a14c03fbfb8b0');
 INSERT INTO `users` (`username`, `first_name`, `last_name`, `password`) VALUES ('balistreri.virgie', 'Sonny', 'Purdy', 'e4e46822594a4f47890a7c7a8e3e4e');

@@ -42,6 +42,6 @@ public class RegistrationController {
             return "signup";
         }
         model.addAttribute("registrationMsg", "user.registration.verification.email.msg");
-        return "signup";
+        return "login";
     }
 }

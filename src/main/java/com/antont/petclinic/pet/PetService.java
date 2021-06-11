@@ -18,43 +18,38 @@ import java.util.Optional;
 public class PetService {
 
     private final CurrentUserService currentUserService;
-    private final UserRepository userRepository;
     private final PetTypeRepository petTypeRepository;
     private final PetRepository petRepository;
 
 
-    public PetService(PetRepository petRepository, CurrentUserService currentUserService, UserRepository userRepository, PetTypeRepository roleRepository) {
+    public PetService(PetRepository petRepository, CurrentUserService currentUserService, PetTypeRepository roleRepository) {
         this.petRepository = petRepository;
         this.currentUserService = currentUserService;
-        this.userRepository = userRepository;
         this.petTypeRepository = roleRepository;
     }
 
     public List<Pet> findAllPetsByOwner(Pageable pageable) {
-        String user = currentUserService.getCurrentUserName();
-        Optional<User> owner = userRepository.findUserByUsername(user);
+        User user = currentUserService.getCurrentUser();
 
-        return new ArrayList<>(petRepository.findAllByOwner(owner));
+        return new ArrayList<>(petRepository.findAllByOwner(user));
     }
 
     public void addPet(PetDto petDto) {
-        String user = currentUserService.getCurrentUserName();
-        User owner = userRepository.findUserByUsername(user).orElseThrow();
+        User user = currentUserService.getCurrentUser();
 
         Pet pet = new Pet();
         pet.setName(petDto.getName());
         Integer petTypeId = Integer.valueOf(petDto.getType());
         PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
         pet.setType(type);
-        pet.setOwner(owner);
+        pet.setOwner(user);
 
         petRepository.save(pet);
     }
 
     public Page<Pet> findPaginated(Pageable pageable) {
-        String user = currentUserService.getCurrentUserName();
-        Optional<User> petOwner = userRepository.findUserByUsername(user);
-        List<Pet> pets = petRepository.findAllByOwner(petOwner);
+        User user = currentUserService.getCurrentUser();
+        List<Pet> pets = petRepository.findAllByOwner(user);
 
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();

@@ -1,12 +1,11 @@
 package com.antont.petclinic.pet;
 
+import com.antont.petclinic.issues.Issue;
 import com.antont.petclinic.model.NamedEntity;
 import com.antont.petclinic.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "pets")
