@@ -1,12 +1,15 @@
-package com.antont.petclinic.visit;
+package com.antont.petclinic.issues;
 
 import com.antont.petclinic.model.BaseEntity;
 import com.antont.petclinic.pet.Pet;
 import com.antont.petclinic.user.User;
+import com.antont.petclinic.user.UserRole;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "issue")
