@@ -31,6 +31,12 @@ public class IssueController {
 
         model.addAttribute("issuesPage", issuesPage);
 
+        String sortBy = "id";
+        model.addAttribute("sortBy", sortBy);
+
+        int sortDirection = 0;
+        model.addAttribute("sortDirection", sortDirection);
+
         int totalPages = issuesPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
