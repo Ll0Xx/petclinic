@@ -22,6 +22,7 @@
                 </li>
             </ul>
             <div class="d-flex justify-content-between" th:if="${#httpServletRequest.remoteUser}">
+                <a th:href="@{/user/issues}" class="btn btn-lg btn-outline-light" style="border: 0">Issues</a>
                 <a th:text="${#httpServletRequest.remoteUser}" th:href="@{/user}" class="btn btn-lg btn-outline-light" style="border: 0"></a>
                 <a th:href="@{/logout}" class="btn btn-lg btn-secondary">Log Out</a>
             </div>
