@@ -16,10 +16,10 @@
             <table class="table" style="margin-top: 2em">
                 <thead>
                 <tr>
-                    <th th:text="#{msg.id.id}"></th>
-                    <th th:text="#{msg.name.name}"></th>
+                    <th th:text="#{base.id}"></th>
+                    <th th:text="#{base.name}"></th>
                     <th th:text="#{issues.doctor}"></th>
-                    <th th:text="#{issues.issue}"></th>
+                    <th th:text="#{issues.description}"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -27,8 +27,9 @@
                     th:style="${iStat.odd}? 'font-weight: bold;'"
                     th:alt-title="${iStat.even}? 'even' : 'odd'">
                     <td th:text="${issue.id}"></td>
-                    <td th:text="${issue.name}"></td>
-                    <td th:text="${issue.type}"></td>
+                    <td th:text="${issue.pet.name}"></td>
+                    <td th:text="${issue.doctor.firstName + ' ' + issue.doctor.lastName }"></td>
+                    <td th:text="${issue.issue}"></td>
                 </tr>
                 </tbody>
             </table>
