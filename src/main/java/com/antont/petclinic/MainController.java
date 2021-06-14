@@ -18,16 +18,6 @@ import java.util.stream.IntStream;
 @Controller
 public class MainController {
 
-    private final PetService petService;
-    private final CurrentUserService currentUserService;
-    private final PetTypeRepository petTypeRepository;
-
-    public MainController(PetService petService, CurrentUserService currentUserService, PetTypeRepository petTypeRepository) {
-        this.petService = petService;
-        this.currentUserService = currentUserService;
-        this.petTypeRepository = petTypeRepository;
-    }
-
     @GetMapping(value = {"/", "/index"})
     public String index() {
         return "/index";
@@ -36,37 +26,5 @@ public class MainController {
     @GetMapping("/admin")
     public String admin() {
         return "/admin";
-    }
-
-    @GetMapping("/user")
-    public String listBooks(
-            Model model,
-            @RequestParam("page") Optional<Integer> page,
-            @RequestParam("size") Optional<Integer> size) {
-        String user = currentUserService.getCurrentUserName();
-        model.addAttribute("user", user);
-
-        List<PetType> petTypes = petTypeRepository.findAll();
-        model.addAttribute("petTypes", petTypes);
-
-        PetDto petDto = new PetDto();
-        model.addAttribute("pet", petDto);
-
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
-
-        Page<Pet> petsPage = petService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
-
-        model.addAttribute("petsPage", petsPage);
-
-        int totalPages = petsPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-
-        return "/user";
     }
 }
