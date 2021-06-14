@@ -3,10 +3,7 @@ package com.antont.petclinic.issues;
 import com.antont.petclinic.pet.Pet;
 import com.antont.petclinic.security.CurrentUserService;
 import com.antont.petclinic.user.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -26,11 +23,12 @@ public class IssuesService {
     public Page<Issue> findPaginated(Pageable pageable) {
 
         User user = currentUserService.getCurrentUser();
-        List<Issue> issues = issuesRepository.findByPetOwner(user);
+        List<Issue> issues = issuesRepository.findByPetOwner(user, pageable);
 
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
+        Sort sort = pageable.getSort();
         List<Issue> list;
 
         if (issues.size() < startItem) {
@@ -41,7 +39,7 @@ public class IssuesService {
         }
 
         Page<Issue> PetsPage
-                = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), issues.size());
+                = new PageImpl<>(list, PageRequest.of(currentPage, pageSize, sort), issues.size());
 
         return PetsPage;
     }

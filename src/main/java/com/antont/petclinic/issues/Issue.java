@@ -3,13 +3,10 @@ package com.antont.petclinic.issues;
 import com.antont.petclinic.model.BaseEntity;
 import com.antont.petclinic.pet.Pet;
 import com.antont.petclinic.user.User;
-import com.antont.petclinic.user.UserRole;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "issue")
@@ -25,7 +22,7 @@ public class Issue extends BaseEntity {
 
     @Column(name = "description")
     @NotEmpty
-    private String issue;
+    private String description;
 
     @Column(name = "date")
     private Date date;
@@ -49,12 +46,12 @@ public class Issue extends BaseEntity {
         this.doctor = doctor;
     }
 
-    public String getIssue() {
-        return this.issue;
+    public String getDescription() {
+        return this.description;
     }
 
-    public void setIssue(String password) {
-        this.issue = issue;
+    public void setDescription(String password) {
+        this.description = description;
     }
 
     public Date getDate() {
