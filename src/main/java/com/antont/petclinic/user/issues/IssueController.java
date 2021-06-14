@@ -1,4 +1,4 @@
-package com.antont.petclinic.issues;
+package com.antont.petclinic.user.issues;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

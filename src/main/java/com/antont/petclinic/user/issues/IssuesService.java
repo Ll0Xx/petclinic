@@ -1,8 +1,8 @@
-package com.antont.petclinic.issues;
+package com.antont.petclinic.user.issues;
 
-import com.antont.petclinic.pet.Pet;
 import com.antont.petclinic.security.CurrentUserService;
 import com.antont.petclinic.user.User;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +20,24 @@ public class IssuesService {
         this.issuesRepository = issuesRepository;
     }
 
+    public Page<Issue> findPaginatedForDoctor(Pageable pageable) {
+
+        User user = currentUserService.getCurrentUser();
+        List<Issue> issues = issuesRepository.findByDoctor(user, pageable);
+
+        return getPaginatedIssues(pageable, issues);
+    }
+
     public Page<Issue> findPaginated(Pageable pageable) {
 
         User user = currentUserService.getCurrentUser();
         List<Issue> issues = issuesRepository.findByPetOwner(user, pageable);
 
+        return getPaginatedIssues(pageable, issues);
+    }
+
+    @NotNull
+    private Page<Issue> getPaginatedIssues(Pageable pageable, List<Issue> issues) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;

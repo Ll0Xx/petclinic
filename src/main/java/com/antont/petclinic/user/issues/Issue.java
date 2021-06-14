@@ -1,4 +1,4 @@
-package com.antont.petclinic.issues;
+package com.antont.petclinic.user.issues;
 
 import com.antont.petclinic.model.BaseEntity;
 import com.antont.petclinic.pet.Pet;
