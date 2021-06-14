@@ -61,11 +61,11 @@
                 </tbody>
             </table>
             <div class="row justify-content-md-center">
-                <div th:if="${petsPage.totalPages > 0}" class="col-1"
+                <div th:if="${petsPage.totalPages > 1}" class="col-1"
                      th:each="pageNumber : ${pageNumbers}">
                     <a th:href="@{/user(size=${petsPage.size}, page=${pageNumber})}"
                        th:text=${pageNumber}
-                       th:class="${pageNumber==petsPage.number + 1 ? 'btn btn-outline-primary' : 'btn btn-primary'}"></a>
+                       th:class="${pageNumber==petsPage.number + 1 ? 'btn btn-primary' : 'btn btn-outline-primary'}"></a>
                 </div>
             </div>
         </div>
