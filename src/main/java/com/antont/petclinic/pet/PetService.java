@@ -2,17 +2,17 @@ package com.antont.petclinic.pet;
 
 import com.antont.petclinic.security.CurrentUserService;
 import com.antont.petclinic.user.User;
-import com.antont.petclinic.user.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class PetService {
@@ -37,6 +37,22 @@ public class PetService {
     public void addPet(PetDto petDto) {
         User user = currentUserService.getCurrentUser();
 
+        savePet(petDto, user);
+    }
+
+    public void updatePet(int petId, PetDto petDto) {
+        Pet petData = petRepository.findById(petId).orElseThrow();
+
+        if (isPetOwnerValid(petId)) {
+            petData.setName(petDto.getName());
+            Integer petTypeId = Integer.valueOf(petDto.getType());
+            PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
+            petData.setType(type);
+            petRepository.save(petData);
+        }
+    }
+
+    private void savePet(PetDto petDto, User user) {
         Pet pet = new Pet();
         pet.setName(petDto.getName());
         Integer petTypeId = Integer.valueOf(petDto.getType());
@@ -45,6 +61,25 @@ public class PetService {
         pet.setOwner(user);
 
         petRepository.save(pet);
+    }
+
+    public void deletePet(int petId) {
+        if (isPetOwnerValid(petId)) {
+            petRepository.deleteById(petId);
+        }
+    }
+
+    private boolean isPetOwnerValid(int petId) {
+        User user = currentUserService.getCurrentUser();
+
+        Pet petData = petRepository.findById(petId).orElseThrow();
+
+        if (Objects.equals(user.getUsername(), petData.getOwner().getUsername())) {
+            return true;
+        } else {
+            throw new AccessDeniedException("Update rejected due to attempt to update pet entity with id: " + petId +
+                    " that does not belong to the current user, username: " + user.getUsername());
+        }
     }
 
     public Page<Pet> findPaginated(Pageable pageable) {
