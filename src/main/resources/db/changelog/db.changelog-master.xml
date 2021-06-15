@@ -40,7 +40,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
             </column>
         </createTable>
         <createTable tableName="animal_type">
-            <column name="id" type="int">
+            <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(30)"/>
@@ -76,4 +76,6 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     </changeSet>
 
     <include file="db/changelog/db.changelog-1.0.xml" />
+    <include file="db/changelog/db.data-pet-type-1.0.xml" />
+    <include file="db/changelog/db.data-user-roles-1.0.xml" />
 </databaseChangeLog>
