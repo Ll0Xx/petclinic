@@ -35,6 +35,7 @@ public class RegistrationController {
         }
         try {
             userService.register(userDto);
+        //What about any other exception?
         }catch (UserAlreadyExistException e){
             bindingResult.rejectValue("username", "userData.username",
                     "An account already exists");

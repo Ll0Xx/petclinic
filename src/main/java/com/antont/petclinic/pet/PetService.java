@@ -82,6 +82,7 @@ public class PetService {
         }
     }
 
+    //ToDo: Add proper java doc
     public Page<Pet> findPaginated(Pageable pageable) {
         User user = currentUserService.getCurrentUser();
         List<Pet> pets = petRepository.findAllByOwner(user);

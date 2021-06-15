@@ -43,6 +43,8 @@ public class UserController {
         PetDto petDto = new PetDto();
         model.addAttribute("pet", petDto);
 
+        //ToDo: fix magic numbers
+        //ToDo: Move logic to proper service/component layers
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 
