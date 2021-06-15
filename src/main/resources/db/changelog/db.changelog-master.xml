@@ -75,7 +75,8 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
         </createTable>
     </changeSet>
 
-    <include file="db/changelog/db.changelog-1.0.xml" />
-    <include file="db/changelog/db.data-pet-type-1.0.xml" />
-    <include file="db/changelog/db.data-user-roles-1.0.xml" />
+    <include file="db/changelog/db.changelog-1.0.xml"/>
+    <include file="db/changelog/db.data-pet-type-1.0.xml"/>
+    <include file="db/changelog/db.data-user-roles-1.0.xml"/>
+    <include file="db/changelog/db.changelog-1.1.xml"/>
 </databaseChangeLog>
