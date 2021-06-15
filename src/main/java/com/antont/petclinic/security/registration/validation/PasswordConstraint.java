@@ -9,8 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PasswordConstraint {
-    //ToDo move to messages.properties files
-    String message() default "Password must have at least one letter, one number and one special character";
+    String message() default "{validation.invalidPassword}";
 
     Class<?>[] groups() default {};
 

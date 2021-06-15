@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TypeConstraint {
-    String message() default "Type not present in database";
+    String message() default "{validation.invalidPetType}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NameConstraint {
-    String message() default "Must be from 3 to 10 characters long";
+    String message() default "{validation.invalidName}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
