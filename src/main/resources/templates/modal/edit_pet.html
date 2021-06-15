@@ -29,8 +29,8 @@
 
 
                         <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                            <select class="form-control" th:field="*{type}" id="updatePetType">
-                                <option value="0">Select pet Type</option>
+                            <select class="form-control" th:field="*{type}" id="updatePetType" required>
+                                <option value="">Select pet Type</option>
                                 <option th:each="operator : ${petTypes}" th:value="${operator.id}"
                                         th:text="${operator.name}"></option>
                             </select>

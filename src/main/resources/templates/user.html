@@ -27,11 +27,13 @@
 
 
                         <div class="form-group col-xs-4 col-sm-4 col-md-4">
-                            <select class="form-control" th:field="*{type}" id="dropOperator">
-                                <option value="0">Select pet Type</option>
+                            <select class="form-control" th:field="*{type}" id="dropOperator" required>
+                                <option value="">Select pet Type</option>
                                 <option th:each="operator : ${petTypes}" th:value="${operator.id}"
                                         th:text="${operator.name}"></option>
                             </select>
+                            <p class="text-danger" th:each="error : ${#fields.errors('type')}"
+                               th:text="${error}">Validation error</p>
                         </div>
 
                         <div class="col-xs-4 col-sm-4 col-md-3">

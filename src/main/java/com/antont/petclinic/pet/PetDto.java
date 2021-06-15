@@ -1,5 +1,6 @@
 package com.antont.petclinic.pet;
 
+import com.antont.petclinic.pet.validation.TypeConstraint;
 import com.antont.petclinic.security.registration.validation.NameConstraint;
 
 import javax.validation.constraints.NotNull;
@@ -13,7 +14,8 @@ public class PetDto {
     private String name;
 
     @NotNull
-    private String type;
+    @TypeConstraint
+    private Integer type;
 
     public String getName() {
         return name;
@@ -23,11 +25,11 @@ public class PetDto {
         this.name = name;
     }
 
-    public String getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 }

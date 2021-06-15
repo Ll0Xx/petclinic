@@ -6,8 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface PetTypeRepository extends JpaRepository<PetType, Long> {
-
-    Optional<PetType> findByName(String name);
-    Optional<PetType> findById(Integer name);
+public interface PetTypeRepository extends JpaRepository<PetType, Integer> {
 }
