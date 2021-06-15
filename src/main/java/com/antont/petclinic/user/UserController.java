@@ -19,6 +19,9 @@ import java.util.stream.IntStream;
 @RequestMapping("/user")
 public class UserController {
 
+    private static final int PAGE_START_NUMBER = 1;
+    private static final int PAGE_SIZE = 5;
+
     private final PetService petService;
     private final CurrentUserService currentUserService;
     private final PetTypeRepository petTypeRepository;
@@ -45,15 +48,15 @@ public class UserController {
 
         //ToDo: fix magic numbers
         //ToDo: Move logic to proper service/component layers
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
+        int currentPage = page.orElse(PAGE_START_NUMBER);
+        int pageSize = size.orElse(PAGE_SIZE);
 
         Page<Pet> petsPage = petService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
 
         model.addAttribute("petsPage", petsPage);
 
         int totalPages = petsPage.getTotalPages();
-        if (totalPages > 0) {
+        if (totalPages > 1) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
                     .collect(Collectors.toList());

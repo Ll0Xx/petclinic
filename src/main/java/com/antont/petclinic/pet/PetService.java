@@ -82,7 +82,11 @@ public class PetService {
         }
     }
 
-    //ToDo: Add proper java doc
+    /**
+     * Method return Page<Pet> object with paginated List<Pet> object and input Pageable object
+     * @param pageable parameters used to retrieve data from the database
+     * @return a Page<Pet> object with a list of pet elements and input Pageable parameters
+     */
     public Page<Pet> findPaginated(Pageable pageable) {
         User user = currentUserService.getCurrentUser();
         List<Pet> pets = petRepository.findAllByOwner(user);

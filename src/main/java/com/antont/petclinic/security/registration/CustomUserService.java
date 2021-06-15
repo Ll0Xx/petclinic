@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-//Not clear why are use using service name. It is best practice to create interface and service with same name?
-@Service("userService")
+@Service
 public class CustomUserService implements UserService {
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -33,12 +32,6 @@ public class CustomUserService implements UserService {
 
         UserRole role = roleRepository.findByName("USER").orElseThrow();
 
-        User user = initializeUserFromDto(userDto, role);
-        userRepository.save(user);
-    }
-
-    //Not clear why do we need this method? We do not reuse this code
-    private User initializeUserFromDto(UserDto userDto, UserRole role) {
         User user = new User();
 
         user.setUsername(userDto.getUsername());
@@ -48,7 +41,7 @@ public class CustomUserService implements UserService {
         user.setActive(true);
         encodePassword(userDto, user);
 
-        return user;
+        userRepository.save(user);
     }
 
     @Override
