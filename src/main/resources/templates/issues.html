@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>User Page</title>
     <div th:replace="fragments/header :: header-css"></div>
@@ -20,23 +21,23 @@
                 <tr>
                     <th>
                         <a th:text="#{base.id}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='id', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='id', sortDir=${reverseSortDir})}"></a>
                     </th>
                     <th>
                         <a th:text="#{base.name}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='pet', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='pet', sortDir=${reverseSortDir})}"></a>
                     </th>
                     <th>
                         <a th:text="#{issues.doctor}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='doctor', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='doctor', sortDir=${reverseSortDir})}"></a>
                     </th>
                     <th>
                         <a th:text="#{issues.description}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='description', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='description', sortDir=${reverseSortDir})}"></a>
                     </th>
                     <th>
                         <a th:text="#{base.date}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='date', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='date', sortDir=${reverseSortDir})}"></a>
                     </th>
                 </tr>
                 </thead>
@@ -55,7 +56,7 @@
             <div class="row justify-content-md-center">
                 <div th:if="${issuesPage.totalPages > 1}" class="col-1"
                      th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{/user/issues/(size=${size}, page=${pageNumber}, sortField=${sortField}, sortDir=${sortDir})}"
+                    <a th:href="@{/issues/(size=${size}, page=${pageNumber}, sortField=${sortField}, sortDir=${sortDir})}"
                        th:text=${pageNumber}
                        th:class="${pageNumber==issuesPage.number + 1 ? 'btn btn-primary' : 'btn btn-outline-primary' }"></a>
                 </div>
