@@ -27,18 +27,23 @@ public class UserController {
     }
 
     @GetMapping()
-    public String listBooks(
+    public String petsList(
             Model model,
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size) {
         String user = currentUserService.getCurrentUserName();
         model.addAttribute("user", user);
 
+        if (!model.containsAttribute("updateMessage")) {
+            model.addAttribute("updateMessage", "");
+        }
+
         List<PetType> petTypes = petTypeRepository.findAll();
         model.addAttribute("petTypes", petTypes);
 
-        PetDto petDto = new PetDto();
-        model.addAttribute("pet", petDto);
+        if (!model.containsAttribute("pet")) {
+            model.addAttribute("pet", new PetDto());
+        }
 
         Page<Pet> petsPage = petService.findPaginated(page, size);
         model.addAttribute("petsPage", petsPage);
