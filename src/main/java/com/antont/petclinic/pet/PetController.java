@@ -36,8 +36,6 @@ public class PetController {
     public String editPet(@RequestParam("id") Optional<Integer> id, @Valid @ModelAttribute PetDto petDto,
                           final BindingResult bindingResult, RedirectAttributes attr) {
         if (bindingResult.hasErrors()) {
-//            attr.addFlashAttribute("org.springframework.validation.BindingResult.pet", bindingResult);
-//            attr.addFlashAttribute("pet", petDto);
             return "redirect:/user";
         }
         int petId = id.orElseThrow();
