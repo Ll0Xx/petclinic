@@ -3,8 +3,11 @@ package com.antont.petclinic.security;
 import com.antont.petclinic.user.User;
 import com.antont.petclinic.user.UserRepository;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 public class CurrentUserService {
@@ -22,5 +25,9 @@ public class CurrentUserService {
     public String getCurrentUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
+    }
+
+    public Collection<? extends GrantedAuthority> getCurrentUserAuthorities() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities();
     }
 }

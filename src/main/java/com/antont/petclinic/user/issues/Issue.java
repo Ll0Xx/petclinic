@@ -47,10 +47,10 @@ public class Issue extends BaseEntity {
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
-    public void setDescription(String password) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

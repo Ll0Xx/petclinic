@@ -1,17 +1,16 @@
 package com.antont.petclinic.user.issues;
 
+import com.antont.petclinic.user.UserRoleName;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 public class IssueController {
@@ -22,37 +21,32 @@ public class IssueController {
         this.issuesService = issuesService;
     }
 
-    @GetMapping("/user/issues")
-    public String findPaginated(@RequestParam("page") Optional<Integer> page,
+    @GetMapping("/issues")
+    public String findPaginated(HttpServletRequest request,
+                                @RequestParam("page") Optional<Integer> page,
                                 @RequestParam("size") Optional<Integer> size,
                                 @RequestParam("sortField") Optional<String> sortField,
                                 @RequestParam("sortDir") Optional<String> sortDir,
                                 Model model) {
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
-        String currentSortField = sortField.orElse("id");
-        String currentSortDir = sortDir.orElse("asc");
-
-        Sort sort = currentSortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(currentSortField).ascending() :
-                Sort.by(currentSortField).descending();
-
-        Page<Issue> issuesPage = issuesService.findPaginated(PageRequest.of(currentPage - 1, pageSize, sort));
-
+        boolean isDoctor = request.isUserInRole(UserRoleName.DOCTOR.name());
+        Page<Issue> issuesPage = issuesService.findPaginatedForDoctor(page, size, sortField, sortDir, isDoctor);
         model.addAttribute("issuesPage", issuesPage);
 
-        model.addAttribute("currentPage", currentPage);
-        model.addAttribute("size", pageSize);
+        String currentSortField = sortField.orElse("id");
+        String currentSortDir = sortDir.orElse(Sort.Direction.ASC.name());
+
+        model.addAttribute("currentPage", issuesPage.getPageable().getPageNumber());
+        model.addAttribute("size", issuesPage.getPageable().getPageSize());
         model.addAttribute("sortField", currentSortField);
         model.addAttribute("sortDir", currentSortDir);
-        model.addAttribute("reverseSortDir", currentSortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("reverseSortDir", currentSortDir.equals(Sort.Direction.ASC.name()) ?
+                Sort.Direction.DESC.name() : Sort.Direction.ASC.name());
 
-        int totalPages = issuesPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+
+        List<Integer> pagesNumbers = issuesService.getPagesNumbersList(issuesPage.getTotalPages());
+        model.addAttribute("pageNumbers", pagesNumbers);
+
+        model.addAttribute("issue", new IssueDto());
 
         return "/issues";
     }

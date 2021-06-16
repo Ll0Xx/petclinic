@@ -1,59 +1,77 @@
 package com.antont.petclinic.user.issues;
 
+import com.antont.petclinic.pet.PetRepository;
 import com.antont.petclinic.security.CurrentUserService;
 import com.antont.petclinic.user.User;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class IssuesService {
 
+    private static final int PAGE_START_NUMBER = 1;
+    private static final int PAGE_SIZE = 2;
+    private static final String DEFAULT_SORT_FIELD = "id";
     final private CurrentUserService currentUserService;
     final private IssuesRepository issuesRepository;
+    final private PetRepository petRepository;
 
-    public IssuesService(CurrentUserService currentUserService, IssuesRepository issuesRepository) {
+    public IssuesService(CurrentUserService currentUserService, IssuesRepository issuesRepository, PetRepository petRepository) {
         this.currentUserService = currentUserService;
         this.issuesRepository = issuesRepository;
+        this.petRepository = petRepository;
     }
 
-    public Page<Issue> findPaginatedForDoctor(Pageable pageable) {
-
+    public Page<Issue> findPaginatedForDoctor(Optional<Integer> page, Optional<Integer> size, Optional<String> sortField,
+                                              Optional<String> sortDir, boolean isDoctor) {
         User user = currentUserService.getCurrentUser();
-        List<Issue> issues = issuesRepository.findByDoctor(user, pageable);
 
-        return getPaginatedIssues(pageable, issues);
-    }
+        int currentPage = page.orElse(PAGE_START_NUMBER);
+        int pageSize = size.orElse(PAGE_SIZE);
+        String currentSortField = sortField.orElse(DEFAULT_SORT_FIELD);
+        String currentSortDir = sortDir.orElse(Sort.Direction.ASC.name());
 
-    public Page<Issue> findPaginated(Pageable pageable) {
+        Sort sort = currentSortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(currentSortField).ascending() :
+                Sort.by(currentSortField).descending();
 
-        User user = currentUserService.getCurrentUser();
-        List<Issue> issues = issuesRepository.findByPetOwner(user, pageable);
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
 
-        return getPaginatedIssues(pageable, issues);
-    }
+        List<Issue> issues;
 
-    @NotNull
-    private Page<Issue> getPaginatedIssues(Pageable pageable, List<Issue> issues) {
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        Sort sort = pageable.getSort();
-        List<Issue> list;
+        if (isDoctor) {
+            issues = issuesRepository.findByDoctor(user, pageable);
 
-        if (issues.size() < startItem) {
-            list = Collections.emptyList();
         } else {
-            int toIndex = Math.min(startItem + pageSize, issues.size());
-            list = issues.subList(startItem, toIndex);
+            issues = issuesRepository.findByPetOwner(user, pageable);
         }
 
-        Page<Issue> PetsPage
-                = new PageImpl<>(list, PageRequest.of(currentPage, pageSize, sort), issues.size());
+        return new PageImpl<>(issues, PageRequest.of(currentPage - 1, pageSize, sort), issues.size());
+    }
 
-        return PetsPage;
+    public void addNewIssue(IssueDto issueDto) {
+        Issue issue = new Issue();
+        issue.setDoctor(currentUserService.getCurrentUser());
+        issue.setPet(petRepository.getById(issueDto.getPet()));
+        issue.setDescription(issueDto.getDescription());
+        issue.setDate(issueDto.getDate());
+
+        issuesRepository.save(issue);
+    }
+
+    /**
+     * generate list of numbers for 1 to totalPages
+     *
+     * @param totalPages number of total pages of Page<> element
+     * @return list of integer for 1 to totalPages
+     */
+    public List<Integer> getPagesNumbersList(Integer totalPages) {
+        return IntStream.rangeClosed(1, totalPages)
+                .boxed()
+                .collect(Collectors.toList());
     }
 }
