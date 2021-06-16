@@ -16,6 +16,43 @@
 
             <h1 style="margin-top: 2em">Issues history</h1>
 
+            <form sec:authorize="hasRole('DOCTOR')" th:action="@{/doctor/issues/new}" th:object="${issue}"
+                  method="post">
+                <fieldset>
+                    <h1 th:inline="text">Hello [[${user}]]!</h1>
+
+                    <div style="display: flex;  margin-top: 2em">
+                        <div class="form-group col-6">
+                            <input type="number" min="1" name="petId" id="petId" th:field="*{pet}"
+                                   class="form-control input-lg" placeholder="Pet id" required autofocus/>
+                            <p class="text-danger" th:each="error : ${#fields.errors('pet')}"
+                               th:text="${error}">Validation error</p>
+                        </div>
+
+                        <div class="form-group col-6">
+                            <input type="date" name="date" id="date" th:field="*{date}"
+                                   class="form-control input-lg" placeholder="date" required autofocus/>
+                            <p class="text-danger" th:each="error : ${#fields.errors('date')}"
+                               th:text="${error}">Validation error</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-12">
+                        <textarea name="description" id="description" th:field="*{description}"
+                                  class="form-control input-lg" placeholder="issue description" required
+                                  autofocus></textarea>
+                        <p class="text-danger" th:each="error : ${#fields.errors('description')}"
+                           th:text="${error}">Validation error</p>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-3">
+                        <button type="submit" class="btn btn-primary btn-block">Add pet</button>
+                    </div>
+
+                </fieldset>
+            </form>
+
+
             <table class="table" style="margin-top: 2em" th:id="issues-table">
                 <thead>
                 <tr>
