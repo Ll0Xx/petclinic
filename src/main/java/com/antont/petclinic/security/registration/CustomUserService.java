@@ -1,10 +1,7 @@
 package com.antont.petclinic.security.registration;
 
 import com.antont.petclinic.security.registration.excepsion.UserAlreadyExistException;
-import com.antont.petclinic.user.RoleRepository;
-import com.antont.petclinic.user.User;
-import com.antont.petclinic.user.UserRepository;
-import com.antont.petclinic.user.UserRole;
+import com.antont.petclinic.user.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +24,10 @@ public class CustomUserService implements UserService {
     public void register(UserDto userDto) throws UserAlreadyExistException {
 
         if (checkIfUserExist(userDto.getUsername())) {
-            throw new UserAlreadyExistException("User already exists for this email");
+            throw new UserAlreadyExistException("{exceptions.userAlreadyExist}");
         }
 
-        UserRole role = roleRepository.findByName("USER").orElseThrow();
+        UserRole role = roleRepository.findByName(UserRoleName.USER.name()).orElseThrow();
 
         User user = new User();
 

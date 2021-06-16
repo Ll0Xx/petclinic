@@ -1,5 +1,6 @@
 package com.antont.petclinic.security.registration;
 
+import com.antont.petclinic.MessagesService;
 import com.antont.petclinic.security.registration.excepsion.UserAlreadyExistException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +16,11 @@ import javax.validation.Valid;
 public class RegistrationController {
 
     private final UserService userService;
+    private final MessagesService messagesService;
 
-    public RegistrationController(UserService userService) {
+    public RegistrationController(UserService userService, MessagesService messagesService) {
         this.userService = userService;
+        this.messagesService = messagesService;
     }
 
     @GetMapping("/signup")
@@ -35,14 +38,14 @@ public class RegistrationController {
         }
         try {
             userService.register(userDto);
-        //What about any other exception?
-        }catch (UserAlreadyExistException e){
-            bindingResult.rejectValue("username", "userData.username",
-                    "An account already exists");
-            model.addAttribute("registrationForm", userDto);
+        } catch (UserAlreadyExistException e) {
+            String message = messagesService.getMessage("exceptions.userAlreadyExist");
+            bindingResult.rejectValue("username", "userData.username", message);
+            return "signup";
+        } catch (Exception e) {
+            e.printStackTrace();
             return "signup";
         }
-        model.addAttribute("registrationMsg", "user.registration.verification.email.msg");
         return "login";
     }
 }
