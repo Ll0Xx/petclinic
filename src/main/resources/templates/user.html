@@ -3,6 +3,8 @@
 <head>
     <title>User Page</title>
     <div th:replace="fragments/header :: header-css"></div>
+
+    <link id="contextPathHolder" th:data-contextPath="@{/}"/>
 </head>
 <body>
 
@@ -20,14 +22,14 @@
                         <div class="form-group col-xs-6 col-sm-6 col-md-4">
                             <input type="text" name="name" id="name" th:field="*{name}"
                                    class="form-control input-lg"
-                                   placeholder="Pet name" required="true" autofocus="true"/>
+                                   placeholder="Pet name"/>
                             <p class="text-danger" th:each="error : ${#fields.errors('name')}"
                                th:text="${error}">Validation error</p>
                         </div>
 
 
                         <div class="form-group col-xs-4 col-sm-4 col-md-4">
-                            <select class="form-control" th:field="*{type}" id="dropOperator" required>
+                            <select class="form-control" th:field="*{type}" id="dropOperator">
                                 <option value="">Select pet Type</option>
                                 <option th:each="operator : ${petTypes}" th:value="${operator.id}"
                                         th:text="${operator.name}"></option>
@@ -66,7 +68,7 @@
                     <td th:text="${pet.type}"></td>
                     <td>
                         <button type="button"
-                                th:attr="data-object-id=''+${pet.id}+'', data-object-name=''+${pet.name}+'', data-object-type=''+${pet.type}+'',
+                                th:attr="data-object-id=''+${pet.id}+'', data-object-name=''+${pet.name}+'', data-object-type=''+${pet.type.id}+'',
                                   data-target='#updatePet'" class="btn btn-primary" data-toggle="modal">
                             Edit
                         </button>
@@ -97,31 +99,8 @@
     <script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
     <script th:src="@{/webjars/popper/1.12.3/umd/popper.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/4.4.1-1/js/bootstrap.min.js}"></script>
+    <div th:replace="modal/edit_pet :: editPetScripts"></div>
 
-
-    <script>
-        $('#updatePet').on('show.bs.modal', function (event) {
-            const button = $(event.relatedTarget);
-            const objectId = button.data('object-id');
-            const objectName = button.data('object-name');
-            const objectType = button.data('object-type');
-
-            console.log("ysy id is:" + objectType);
-
-            $("#updatePetForm").attr('action', '/pets/update?id=' + objectId);
-            $("#updatePetName").val(objectName);
-            $("#updatePetType option:contains(" + objectType + ")").attr('selected', 'selected');
-        })
-
-        $('#deletePet').on('show.bs.modal', function (event) {
-            const button = $(event.relatedTarget);
-            const objectId = button.data('object-id');
-
-            console.log("ysy id is:" + objectId);
-
-            $("#deletePetForm").attr('action', '/pets/delete?id=' + objectId);
-        })
-    </script>
 </div>
 </body>
 </html>

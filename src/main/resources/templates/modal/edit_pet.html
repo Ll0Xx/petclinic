@@ -20,7 +20,7 @@
                 <fieldset>
                     <div class="row" style="margin-top: 2em">
                         <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                            <input type="text" name="name" id="updatePetName" th:field="*{name}"
+                            <input type="text" name="editPetName" id="editPetName" th:field="*{name}"
                                    class="form-control input-lg"
                                    placeholder="Pet name" required="true" autofocus="true"/>
                             <p class="text-danger" th:each="error : ${#fields.errors('name')}"
@@ -29,7 +29,7 @@
 
 
                         <div class="form-group col-xs-6 col-sm-6 col-md-6">
-                            <select class="form-control" th:field="*{type}" id="updatePetType" required>
+                            <select class="form-control" th:field="*{type}" id="editPetType" required>
                                 <option value="">Select pet Type</option>
                                 <option th:each="operator : ${petTypes}" th:value="${operator.id}"
                                         th:text="${operator.name}"></option>
@@ -41,11 +41,16 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" onclick="updatePestRequest()">Save changes</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<div th:fragment="editPetScripts">
+    <script th:src="@{/js/pet.js}"></script>
+</div>
+
 </body>
 </html>

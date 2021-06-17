@@ -9,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,7 +33,7 @@ public class PetService {
     public List<Pet> findAllPetsByOwner(Pageable pageable) {
         User user = currentUserService.getCurrentUser();
 
-        return new ArrayList<>(petRepository.findAllByOwner(user));
+        return petRepository.findAllByOwner(user);
     }
 
     public void addPet(PetDto petDto) {
@@ -41,14 +43,18 @@ public class PetService {
     }
 
     public void updatePet(int petId, PetDto petDto) {
-        Pet petData = petRepository.findById(petId).orElseThrow();
+        if (petRepository.existsById(petId)) {
+            Optional<Pet> petData = petRepository.findById(petId);
 
-        if (isPetOwnerValid(petId)) {
-            petData.setName(petDto.getName());
-            Integer petTypeId = petDto.getType();
-            PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
-            petData.setType(type);
-            petRepository.save(petData);
+            petData.ifPresent(pet -> {
+                if (isPetOwnerValid(petId)) {
+                    pet.setName(petDto.getName());
+                    Integer petTypeId = petDto.getType();
+                    PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
+                    pet.setType(type);
+                    petRepository.save(pet);
+                }
+            });
         }
     }
 
@@ -64,8 +70,10 @@ public class PetService {
     }
 
     public void deletePet(int petId) {
-        if (isPetOwnerValid(petId)) {
-            petRepository.deleteById(petId);
+        if (petRepository.existsById(petId)) {
+            if (isPetOwnerValid(petId)) {
+                petRepository.deleteById(petId);
+            }
         }
     }
 
@@ -84,6 +92,7 @@ public class PetService {
 
     /**
      * method return Page<Pet> object with paginated List<Pet> object with page size and number of the requested page
+     *
      * @param page number of requested page
      * @param size size of pages
      * @return a Page<Pet> object with a list of pet elements
@@ -110,6 +119,7 @@ public class PetService {
 
     /**
      * generate list of numbers for 1 to totalPages
+     *
      * @param totalPages number of total pages of Page<> element
      * @return list of integer for 1 to totalPages
      */
