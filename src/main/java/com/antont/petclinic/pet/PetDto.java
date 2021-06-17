@@ -8,12 +8,12 @@ import javax.validation.constraints.Size;
 
 public class PetDto {
 
-    @NotNull
+    @NotNull(message = "{validation.null}")
     @NameConstraint
-    @Size(min = 1, max = 20)
+    @Size(min = 3, max = 20, message = "{validation.invalidLength}")
     private String name;
 
-    @NotNull
+    @NotNull(message = "{validation.null}")
     @TypeConstraint
     private Integer type;
 

@@ -20,6 +20,10 @@ public class TypeValidator implements ConstraintValidator<TypeConstraint, Intege
 
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        return typeRepository.existsById(value);
+        if (value != null) {
+            return typeRepository.existsById(value);
+        } else {
+            return false;
+        }
     }
 }

@@ -3,10 +3,7 @@ package com.antont.petclinic.pet;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -49,16 +46,13 @@ public class PetController {
 
             return "redirect:/user";
         }
-        int petId = id.orElseThrow();
-        petService.updatePet(petId, petDto);
+        id.ifPresent(x -> petService.updatePet(x, petDto));
         return "redirect:/user";
     }
 
     @PostMapping("/delete")
     public String deletePet(@RequestParam("id") Optional<Integer> id) {
-        int petId = id.orElseThrow();
-
-        petService.deletePet(petId);
+        id.ifPresent(petService::deletePet);
         return "redirect:/user";
     }
 }
