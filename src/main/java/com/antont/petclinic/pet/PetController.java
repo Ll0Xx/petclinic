@@ -29,7 +29,7 @@ public class PetController {
     public String editPet(@RequestParam("id") Optional<Integer> id, @Valid @ModelAttribute PetDto petCreationModel) {
         int petId = id.orElseThrow();
 
-        petService.updatePet(petId, petCreationModel);
+        petService.update(petId, petCreationModel);
         return "redirect:/user";
     }
 
@@ -37,7 +37,7 @@ public class PetController {
     public String deletePet(@RequestParam("id") Optional<Integer> id) {
         int petId = id.orElseThrow();
 
-        petService.deletePet(petId);
+        petService.delete(petId);
         return "redirect:/user";
     }
 }

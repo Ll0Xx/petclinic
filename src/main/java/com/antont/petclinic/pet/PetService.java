@@ -25,31 +25,19 @@ public class PetService {
         this.petTypeRepository = roleRepository;
     }
 
-    public List<Pet> findAllPetsByOwner(Pageable pageable) {
+    public List<Pet> findAllByOwner(Pageable pageable) {
         Optional<User> user = currentUserService.getCurrentUser();
 
         return new ArrayList<>(petRepository.findAllByOwner(user));
     }
 
+    public List<Pet> findAll() {
+        return petRepository.findAll();
+    }
+
     public void addPet(PetDto petDto) {
         Optional<User> user = currentUserService.getCurrentUser();
 
-        savePet(petDto, user);
-    }
-
-    public void updatePet(int petId, PetDto petDto) {
-        Pet petData = petRepository.findById(petId).orElseThrow();
-
-        if (isPetOwnerValid(petId)) {
-            petData.setName(petDto.getName());
-            Integer petTypeId = Integer.valueOf(petDto.getType());
-            PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
-            petData.setType(type);
-            petRepository.save(petData);
-        }
-    }
-
-    private void savePet(PetDto petDto, Optional<User> user) {
         user.ifPresent(it -> {
             Pet pet = new Pet();
             pet.setName(petDto.getName());
@@ -60,16 +48,27 @@ public class PetService {
 
             petRepository.save(pet);
         });
-
     }
 
-    public void deletePet(int petId) {
-        if (isPetOwnerValid(petId)) {
+    public void update(int petId, PetDto petDto) {
+        Pet petData = petRepository.findById(petId).orElseThrow();
+
+        if (isOwnerValid(petId)) {
+            petData.setName(petDto.getName());
+            Integer petTypeId = Integer.valueOf(petDto.getType());
+            PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
+            petData.setType(type);
+            petRepository.save(petData);
+        }
+    }
+
+    public void delete(int petId) {
+        if (isOwnerValid(petId)) {
             petRepository.deleteById(petId);
         }
     }
 
-    private boolean isPetOwnerValid(int petId) {
+    private boolean isOwnerValid(int petId) {
         Optional<User> user = currentUserService.getCurrentUser();
         Optional<Pet> petData = petRepository.findById(petId);
 
@@ -80,7 +79,8 @@ public class PetService {
                 throw new AccessDeniedException("Update rejected due to attempt to update pet entity with id: " + petId +
                         " that does not belong to the current user, username: " + user.get().getUsername());
             }
-        } return false;
+        }
+        return false;
     }
 
     public Page<Pet> findPaginated(Pageable pageable) {

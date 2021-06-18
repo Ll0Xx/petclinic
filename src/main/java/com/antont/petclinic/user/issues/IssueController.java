@@ -1,5 +1,7 @@
 package com.antont.petclinic.user.issues;
 
+import com.antont.petclinic.pet.Pet;
+import com.antont.petclinic.pet.PetService;
 import com.antont.petclinic.user.UserRoleName;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class IssueController {
 
     final private IssuesService issuesService;
+    final private PetService petService;
 
-    public IssueController(IssuesService issuesService) {
+    public IssueController(IssuesService issuesService, PetService petService) {
         this.issuesService = issuesService;
+        this.petService = petService;
     }
 
     @GetMapping("/issues")
@@ -34,6 +38,9 @@ public class IssueController {
 
         String currentSortField = sortField.orElse("id");
         String currentSortDir = sortDir.orElse(Sort.Direction.ASC.name());
+
+        List<Pet> petsList = petService.findAll();
+        model.addAttribute("pets", petsList);
 
         model.addAttribute("currentPage", issuesPage.getPageable().getPageNumber());
         model.addAttribute("size", issuesPage.getPageable().getPageSize());

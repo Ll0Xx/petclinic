@@ -23,8 +23,11 @@
 
                     <div style="display: flex;  margin-top: 2em">
                         <div class="form-group col-6">
-                            <input type="number" min="1" name="petId" id="petId" th:field="*{pet}"
-                                   class="form-control input-lg" placeholder="Pet id" required autofocus/>
+                            <select class="form-control" th:field="*{pet}" id="dropOperator" required>
+                                <option value="">Select pet Type</option>
+                                <option th:each="pet : ${pets}" th:value="${pet.id}"
+                                        th:text="${pet.name} + ', owner: ' + ${pet.owner.username}"></option>
+                            </select>
                             <p class="text-danger" th:each="error : ${#fields.errors('pet')}"
                                th:text="${error}">Validation error</p>
                         </div>
