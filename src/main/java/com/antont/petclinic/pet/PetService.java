@@ -36,6 +36,14 @@ public class PetService {
         return petRepository.findAllByOwner(user);
     }
 
+    public Optional<Pet> findPetById(Integer id) {
+        return petRepository.findById(id);
+    }
+
+    public Optional<PetResponseModel> findPetResponseModelById(Integer id) {
+        return petRepository.findById(id).map(Pet::toResponseModel);
+    }
+
     public void addPet(PetDto petDto) {
         User user = currentUserService.getCurrentUser();
 

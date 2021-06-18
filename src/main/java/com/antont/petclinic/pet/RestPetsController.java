@@ -1,6 +1,7 @@
 package com.antont.petclinic.pet;
 
 import com.antont.petclinic.JsonResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,11 @@ public class RestPetsController {
 
     public RestPetsController(PetService petService) {
         this.petService = petService;
+    }
+
+    @GetMapping(value = "api/pets")
+    public ResponseEntity<PetResponseModel> editPet(@RequestParam("id") Optional<Integer> id) {
+        return ResponseEntity.of(id.flatMap(petService::findPetResponseModelById));
     }
 
     @PutMapping(value = "api/pets/update")

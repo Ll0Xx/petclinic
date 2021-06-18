@@ -68,8 +68,9 @@
                     <td th:text="${pet.type}"></td>
                     <td>
                         <button type="button"
-                                th:attr="data-object-id=''+${pet.id}+'', data-object-name=''+${pet.name}+'', data-object-type=''+${pet.type.id}+'',
-                                  data-target='#updatePet'" class="btn btn-primary" data-toggle="modal">
+                                th:attr="data-object-id=''+${pet.id}+'', data-object-name=''+${pet.name}+'',
+                                data-object-type=''+${pet.type.id}+'',data-object-index=''+${iStat.index}+'',
+                                 data-target='#updatePet'" class="btn btn-primary" data-toggle="modal">
                             Edit
                         </button>
                         <button type="button"
