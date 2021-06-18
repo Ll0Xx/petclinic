@@ -22,11 +22,8 @@
                         <div class="form-group col-xs-6 col-sm-6 col-md-6">
                             <input type="text" name="editPetName" id="editPetName" th:field="*{name}"
                                    class="form-control input-lg"
-                                   placeholder="Pet name" required="true" autofocus="true"/>
-                            <p class="text-danger" th:each="error : ${#fields.errors('name')}"
-                               th:text="${error}">Validation error</p>
+                                   placeholder="Pet name" required autofocus/>
                         </div>
-
 
                         <div class="form-group col-xs-6 col-sm-6 col-md-6">
                             <select class="form-control" th:field="*{type}" id="editPetType" required>
