@@ -1,5 +1,6 @@
 package com.antont.petclinic.user.issues;
 
+import com.antont.petclinic.pet.Pet;
 import com.antont.petclinic.pet.PetRepository;
 import com.antont.petclinic.security.CurrentUserService;
 import com.antont.petclinic.user.User;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -29,7 +31,7 @@ public class IssuesService {
 
     public Page<Issue> findPaginatedForDoctor(Optional<Integer> page, Optional<Integer> size, Optional<String> sortField,
                                               Optional<String> sortDir, boolean isDoctor) {
-        User user = currentUserService.getCurrentUser();
+        Optional<User> user = currentUserService.getCurrentUser();
 
         int currentPage = page.orElse(PAGE_START_NUMBER);
         int pageSize = size.orElse(PAGE_SIZE);
@@ -55,12 +57,16 @@ public class IssuesService {
 
     public void addNewIssue(IssueDto issueDto) {
         Issue issue = new Issue();
-        issue.setDoctor(currentUserService.getCurrentUser());
-        issue.setPet(petRepository.getById(issueDto.getPet()));
-        issue.setDescription(issueDto.getDescription());
-        issue.setDate(issueDto.getDate());
 
-        issuesRepository.save(issue);
+        Optional<User> user = currentUserService.getCurrentUser();
+        Optional<Pet> pet = petRepository.findById(issueDto.getPet());
+        if(user.isPresent() && pet.isPresent()){
+            issue.setDoctor(user.get());
+            issue.setPet(pet.get());
+            issue.setDescription(issueDto.getDescription());
+            issue.setDate(issueDto.getDate());
+            issuesRepository.save(issue);
+        }
     }
 
     /**

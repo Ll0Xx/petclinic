@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class CurrentUserService {
@@ -18,8 +19,8 @@ public class CurrentUserService {
         this.userRepository = userRepository;
     }
 
-    public User getCurrentUser() {
-        return userRepository.getById(getCurrentUserName());
+    public Optional<User> getCurrentUser() {
+        return userRepository.findById(getCurrentUserName());
     }
 
     public String getCurrentUserName() {

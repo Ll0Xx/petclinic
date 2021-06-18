@@ -9,10 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class PetService {
@@ -29,13 +26,13 @@ public class PetService {
     }
 
     public List<Pet> findAllPetsByOwner(Pageable pageable) {
-        User user = currentUserService.getCurrentUser();
+        Optional<User> user = currentUserService.getCurrentUser();
 
         return new ArrayList<>(petRepository.findAllByOwner(user));
     }
 
     public void addPet(PetDto petDto) {
-        User user = currentUserService.getCurrentUser();
+        Optional<User> user = currentUserService.getCurrentUser();
 
         savePet(petDto, user);
     }
@@ -52,15 +49,18 @@ public class PetService {
         }
     }
 
-    private void savePet(PetDto petDto, User user) {
-        Pet pet = new Pet();
-        pet.setName(petDto.getName());
-        Integer petTypeId = Integer.valueOf(petDto.getType());
-        PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
-        pet.setType(type);
-        pet.setOwner(user);
+    private void savePet(PetDto petDto, Optional<User> user) {
+        user.ifPresent(it -> {
+            Pet pet = new Pet();
+            pet.setName(petDto.getName());
+            Integer petTypeId = Integer.valueOf(petDto.getType());
+            PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
+            pet.setType(type);
+            pet.setOwner(it);
 
-        petRepository.save(pet);
+            petRepository.save(pet);
+        });
+
     }
 
     public void deletePet(int petId) {
@@ -70,20 +70,21 @@ public class PetService {
     }
 
     private boolean isPetOwnerValid(int petId) {
-        User user = currentUserService.getCurrentUser();
+        Optional<User> user = currentUserService.getCurrentUser();
+        Optional<Pet> petData = petRepository.findById(petId);
 
-        Pet petData = petRepository.findById(petId).orElseThrow();
-
-        if (Objects.equals(user.getUsername(), petData.getOwner().getUsername())) {
-            return true;
-        } else {
-            throw new AccessDeniedException("Update rejected due to attempt to update pet entity with id: " + petId +
-                    " that does not belong to the current user, username: " + user.getUsername());
-        }
+        if (user.isPresent() && petData.isPresent()) {
+            if (Objects.equals(user.get().getUsername(), petData.get().getOwner().getUsername())) {
+                return true;
+            } else {
+                throw new AccessDeniedException("Update rejected due to attempt to update pet entity with id: " + petId +
+                        " that does not belong to the current user, username: " + user.get().getUsername());
+            }
+        } return false;
     }
 
     public Page<Pet> findPaginated(Pageable pageable) {
-        User user = currentUserService.getCurrentUser();
+        Optional<User> user = currentUserService.getCurrentUser();
         List<Pet> pets = petRepository.findAllByOwner(user);
 
         int pageSize = pageable.getPageSize();
