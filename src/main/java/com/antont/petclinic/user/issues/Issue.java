@@ -61,4 +61,9 @@ public class Issue extends BaseEntity {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public IssueResponseModel toResponseModel() {
+        return new IssueResponseModel(getId(), pet.getId(), pet.getName(), doctor.getLastName(),
+                doctor.getFirstName() + " " + doctor.getLastName(), description, date);
+    }
 }

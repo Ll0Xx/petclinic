@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.*;
 
 @Service
 public class PetService {
@@ -47,6 +46,15 @@ public class PetService {
 
     public List<Pet> findAll() {
         return petRepository.findAll();
+    }
+
+    public List<PetResponseModel> findAllAsResponseModel() {
+        List<Pet> pets = petRepository.findAll();
+
+        return pets.stream()
+                .map(Pet::toResponseModel)
+                .collect(Collectors.toList());
+
     }
 
     public void addPet(PetDto petDto) {
@@ -93,7 +101,7 @@ public class PetService {
 
     public void deletePet(int petId) {
         if (petRepository.existsById(petId)) {
-            if (isPetOwnerValid(petId)) {
+            if (isOwnerValid(petId)) {
                 petRepository.deleteById(petId);
             }
         }

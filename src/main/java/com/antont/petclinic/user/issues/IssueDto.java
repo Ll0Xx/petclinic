@@ -13,6 +13,8 @@ public class IssueDto {
     @Size(min = 1, max = 100)
     private String description;
 
+    private String doctor;
+
     private Date date;
 
     public Integer getPet() {
@@ -37,5 +39,13 @@ public class IssueDto {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(String doctor) {
+        this.doctor = doctor;
     }
 }

@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
-@RequestMapping
+@RequestMapping("api/pets")
 public class RestPetsController {
 
     private final PetService petService;
@@ -18,12 +18,12 @@ public class RestPetsController {
         this.petService = petService;
     }
 
-    @GetMapping(value = "api/pets")
+    @GetMapping
     public ResponseEntity<PetResponseModel> editPet(@RequestParam("id") Optional<Integer> id) {
         return ResponseEntity.of(id.flatMap(petService::findPetResponseModelById));
     }
 
-    @PutMapping(value = "api/pets/update")
+    @PutMapping
     public JsonResponse editPet(@RequestParam("id") Optional<Integer> id, @Valid @RequestBody() PetDto petDto,
                                 final BindingResult bindingResult) {
         JsonResponse jsonResponse = new JsonResponse();
@@ -32,7 +32,7 @@ public class RestPetsController {
             jsonResponse.setResult(bindingResult.getAllErrors());
             return jsonResponse;
         }
-        id.ifPresent(x -> petService.updatePet(x, petDto));
+        id.ifPresent(x -> petService.update(x, petDto));
         jsonResponse.setStatus("ok");
         return jsonResponse;
     }

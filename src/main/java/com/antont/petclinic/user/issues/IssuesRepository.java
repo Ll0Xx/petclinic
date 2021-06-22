@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IssuesRepository extends JpaRepository<Issue, Long> {
+public interface IssuesRepository extends JpaRepository<Issue, Integer> {
 
     List<Issue> findByPetOwner(Optional<User> user, Pageable pageable);
+
     List<Issue> findByDoctor(Optional<User> user, Pageable pageable);
 }

@@ -49,7 +49,7 @@ public class PetController {
 
             return "redirect:/user";
         }
-        id.ifPresent(x -> petService.updatePet(x, petDto));
+        id.ifPresent(x -> petService.update(x, petDto));
         return "redirect:/user";
     }
 

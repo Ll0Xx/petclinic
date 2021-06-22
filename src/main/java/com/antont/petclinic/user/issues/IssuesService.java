@@ -4,6 +4,7 @@ import com.antont.petclinic.pet.Pet;
 import com.antont.petclinic.pet.PetRepository;
 import com.antont.petclinic.security.CurrentUserService;
 import com.antont.petclinic.user.User;
+import com.antont.petclinic.user.UserRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +19,21 @@ public class IssuesService {
     private static final int PAGE_START_NUMBER = 0;
     private static final int PAGE_SIZE = 2;
     private static final String DEFAULT_SORT_FIELD = "id";
+    final private UserRepository userRepository;
     final private CurrentUserService currentUserService;
     final private IssuesRepository issuesRepository;
     final private PetRepository petRepository;
 
-    public IssuesService(CurrentUserService currentUserService, IssuesRepository issuesRepository, PetRepository petRepository) {
+    public IssuesService(UserRepository userRepository, CurrentUserService currentUserService,
+                         IssuesRepository issuesRepository, PetRepository petRepository) {
+        this.userRepository = userRepository;
         this.currentUserService = currentUserService;
         this.issuesRepository = issuesRepository;
         this.petRepository = petRepository;
+    }
+
+    public Optional<Issue> findById(int id) {
+        return issuesRepository.findById(id);
     }
 
     public Page<Issue> findPaginatedForDoctor(Optional<Integer> page, Optional<Integer> size, Optional<String> sortField,
@@ -56,7 +64,7 @@ public class IssuesService {
         return new PageImpl<>(issues, PageRequest.of(currentPage, pageSize, sort), totalCount);
     }
 
-    public void addNewIssue(IssueDto issueDto) {
+    public void add(IssueDto issueDto) {
         Issue issue = new Issue();
 
         Optional<User> user = currentUserService.getCurrentUser();
@@ -67,6 +75,34 @@ public class IssuesService {
             issue.setDescription(issueDto.getDescription());
             issue.setDate(issueDto.getDate());
             issuesRepository.save(issue);
+        }
+    }
+
+    public Optional<IssueResponseModel> findPetResponseModelById(Integer id) {
+        return issuesRepository.findById(id).map(Issue::toResponseModel);
+    }
+
+    public void update(Integer issueId, IssueDto issueDto) {
+        if (issuesRepository.existsById(issueId)) {
+            Optional<Issue> issueData = issuesRepository.findById(issueId);
+
+            issueData.ifPresent(issue -> {
+                Optional<Pet> petData = petRepository.findById(issueDto.getPet());
+                issue.setPet(petData.orElseThrow());
+
+                Optional<User> userData = userRepository.findById(issueDto.getDoctor());
+                issue.setDoctor(userData.orElseThrow());
+
+                issue.setDescription(issueDto.getDescription());
+                issue.setDate(issueDto.getDate());
+                issuesRepository.save(issue);
+            });
+        }
+    }
+
+    public void delete(int id) {
+        if (issuesRepository.existsById(id)) {
+            issuesRepository.deleteById(id);
         }
     }
 
