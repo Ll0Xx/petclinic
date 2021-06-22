@@ -9,14 +9,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
 public class IssuesService {
 
-    private static final int PAGE_START_NUMBER = 1;
+    private static final int PAGE_START_NUMBER = 0;
     private static final int PAGE_SIZE = 2;
     private static final String DEFAULT_SORT_FIELD = "id";
     final private CurrentUserService currentUserService;
@@ -41,7 +40,9 @@ public class IssuesService {
         Sort sort = currentSortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(currentSortField).ascending() :
                 Sort.by(currentSortField).descending();
 
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
+        Pageable pageable = PageRequest.of(currentPage, pageSize, sort);
+
+        long totalCount = issuesRepository.count();
 
         List<Issue> issues;
 
@@ -52,7 +53,7 @@ public class IssuesService {
             issues = issuesRepository.findByPetOwner(user, pageable);
         }
 
-        return new PageImpl<>(issues, PageRequest.of(currentPage - 1, pageSize, sort), issues.size());
+        return new PageImpl<>(issues, PageRequest.of(currentPage, pageSize, sort), totalCount);
     }
 
     public void addNewIssue(IssueDto issueDto) {
@@ -60,7 +61,7 @@ public class IssuesService {
 
         Optional<User> user = currentUserService.getCurrentUser();
         Optional<Pet> pet = petRepository.findById(issueDto.getPet());
-        if(user.isPresent() && pet.isPresent()){
+        if (user.isPresent() && pet.isPresent()) {
             issue.setDoctor(user.get());
             issue.setPet(pet.get());
             issue.setDescription(issueDto.getDescription());

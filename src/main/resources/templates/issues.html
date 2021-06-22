@@ -96,7 +96,7 @@
             <div class="row justify-content-md-center">
                 <div th:if="${issuesPage.totalPages > 1}" class="col-1"
                      th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{/issues/(size=${size}, page=${pageNumber}, sortField=${sortField}, sortDir=${sortDir})}"
+                    <a th:href="@{/issues/(size=${size}, page=${pageNumber - 1}, sortField=${sortField}, sortDir=${sortDir})}"
                        th:text=${pageNumber}
                        th:class="${pageNumber==issuesPage.number + 1 ? 'btn btn-primary' : 'btn btn-outline-primary' }"></a>
                 </div>
