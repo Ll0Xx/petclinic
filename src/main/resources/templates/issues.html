@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>User Page</title>
     <div th:replace="fragments/header :: header-css"></div>
@@ -15,28 +16,68 @@
 
             <h1 style="margin-top: 2em">Issues history</h1>
 
+            <form sec:authorize="hasRole('DOCTOR')" th:action="@{/doctor/issues/new}" th:object="${issue}"
+                  method="post">
+                <fieldset>
+                    <h1 th:inline="text">Hello [[${user}]]!</h1>
+
+                    <div style="display: flex;  margin-top: 2em">
+                        <div class="form-group col-6">
+                            <select class="form-control" th:field="*{pet}" id="dropOperator" required>
+                                <option value="">Select pet Type</option>
+                                <option th:each="pet : ${pets}" th:value="${pet.id}"
+                                        th:text="${pet.name} + ', owner: ' + ${pet.owner.username}"></option>
+                            </select>
+                            <p class="text-danger" th:each="error : ${#fields.errors('pet')}"
+                               th:text="${error}">Validation error</p>
+                        </div>
+
+                        <div class="form-group col-6">
+                            <input type="date" name="date" id="date" th:field="*{date}"
+                                   class="form-control input-lg" placeholder="date" required autofocus/>
+                            <p class="text-danger" th:each="error : ${#fields.errors('date')}"
+                               th:text="${error}">Validation error</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-12">
+                        <textarea name="description" id="description" th:field="*{description}"
+                                  class="form-control input-lg" placeholder="issue description" required
+                                  autofocus></textarea>
+                        <p class="text-danger" th:each="error : ${#fields.errors('description')}"
+                           th:text="${error}">Validation error</p>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-3">
+                        <button type="submit" class="btn btn-primary btn-block">Add issue</button>
+                    </div>
+
+                </fieldset>
+            </form>
+
+
             <table class="table" style="margin-top: 2em" th:id="issues-table">
                 <thead>
                 <tr>
                     <th>
                         <a th:text="#{base.id}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='id', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='id', sortDir=${reverseSortDir})}"></a>
                     </th>
                     <th>
                         <a th:text="#{base.name}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='pet', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='pet', sortDir=${reverseSortDir})}"></a>
                     </th>
                     <th>
                         <a th:text="#{issues.doctor}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='doctor', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='doctor', sortDir=${reverseSortDir})}"></a>
                     </th>
                     <th>
                         <a th:text="#{issues.description}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='description', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='description', sortDir=${reverseSortDir})}"></a>
                     </th>
                     <th>
                         <a th:text="#{base.date}"
-                           th:href="@{/user/issues/(size=${size}, page=${currentPage}, sortField='date', sortDir=${reverseSortDir})}"></a>
+                           th:href="@{/issues/(size=${size}, page=${currentPage}, sortField='date', sortDir=${reverseSortDir})}"></a>
                     </th>
                 </tr>
                 </thead>
@@ -55,7 +96,7 @@
             <div class="row justify-content-md-center">
                 <div th:if="${issuesPage.totalPages > 1}" class="col-1"
                      th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{/user/issues/(size=${size}, page=${pageNumber}, sortField=${sortField}, sortDir=${sortDir})}"
+                    <a th:href="@{/issues/(size=${size}, page=${pageNumber - 1}, sortField=${sortField}, sortDir=${sortDir})}"
                        th:text=${pageNumber}
                        th:class="${pageNumber==issuesPage.number + 1 ? 'btn btn-primary' : 'btn btn-outline-primary' }"></a>
                 </div>

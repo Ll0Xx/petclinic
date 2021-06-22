@@ -3,6 +3,7 @@ package com.antont.petclinic.pet;
 import com.antont.petclinic.model.NamedEntity;
 import com.antont.petclinic.user.User;
 
+import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;

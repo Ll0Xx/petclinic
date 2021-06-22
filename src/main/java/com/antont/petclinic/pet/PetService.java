@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.*;
 
 @Service
 public class PetService {
@@ -30,8 +31,8 @@ public class PetService {
         this.petTypeRepository = roleRepository;
     }
 
-    public List<Pet> findAllPetsByOwner(Pageable pageable) {
-        User user = currentUserService.getCurrentUser();
+    public List<Pet> findAllByOwner(Pageable pageable) {
+        Optional<User> user = currentUserService.getCurrentUser();
 
         return petRepository.findAllByOwner(user);
     }
@@ -44,18 +45,31 @@ public class PetService {
         return petRepository.findById(id).map(Pet::toResponseModel);
     }
 
-    public void addPet(PetDto petDto) {
-        User user = currentUserService.getCurrentUser();
-
-        savePet(petDto, user);
+    public List<Pet> findAll() {
+        return petRepository.findAll();
     }
 
-    public void updatePet(int petId, PetDto petDto) {
+    public void addPet(PetDto petDto) {
+        Optional<User> user = currentUserService.getCurrentUser();
+
+        user.ifPresent(it -> {
+            Pet pet = new Pet();
+            pet.setName(petDto.getName());
+            Integer petTypeId = Integer.valueOf(petDto.getType());
+            PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
+            pet.setType(type);
+            pet.setOwner(it);
+
+            petRepository.save(pet);
+        });
+    }
+
+    public void update(int petId, PetDto petDto) {
         if (petRepository.existsById(petId)) {
             Optional<Pet> petData = petRepository.findById(petId);
 
             petData.ifPresent(pet -> {
-                if (isPetOwnerValid(petId)) {
+                if (isOwnerValid(petId)) {
                     pet.setName(petDto.getName());
                     Integer petTypeId = petDto.getType();
                     PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
@@ -85,17 +99,19 @@ public class PetService {
         }
     }
 
-    private boolean isPetOwnerValid(int petId) {
-        User user = currentUserService.getCurrentUser();
+    private boolean isOwnerValid(int petId) {
+        Optional<User> user = currentUserService.getCurrentUser();
+        Optional<Pet> petData = petRepository.findById(petId);
 
-        Pet petData = petRepository.findById(petId).orElseThrow();
-
-        if (Objects.equals(user.getUsername(), petData.getOwner().getUsername())) {
-            return true;
-        } else {
-            throw new AccessDeniedException("Update rejected due to attempt to update pet entity with id: " + petId +
-                    " that does not belong to the current user, username: " + user.getUsername());
+        if (user.isPresent() && petData.isPresent()) {
+            if (Objects.equals(user.get().getUsername(), petData.get().getOwner().getUsername())) {
+                return true;
+            } else {
+                throw new AccessDeniedException("Update rejected due to attempt to update pet entity with id: " + petId +
+                        " that does not belong to the current user, username: " + user.get().getUsername());
+            }
         }
+        return false;
     }
 
     /**
@@ -109,7 +125,7 @@ public class PetService {
         int currentPage = page.orElse(PAGE_START_NUMBER) - 1;
         int pageSize = size.orElse(PAGE_SIZE);
 
-        User user = currentUserService.getCurrentUser();
+        Optional<User> user = currentUserService.getCurrentUser();
         List<Pet> pets = petRepository.findAllByOwner(user);
 
         int startItem = currentPage * pageSize;

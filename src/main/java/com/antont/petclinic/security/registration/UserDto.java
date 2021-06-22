@@ -34,6 +34,7 @@ public class UserDto {
     @Size(min = 5, max = 20)
     private String matchingPassword;
 
+    private boolean isDoctor = false;
 
     public String getUsername() {
         return username;
@@ -73,5 +74,13 @@ public class UserDto {
 
     public void setMatchingPassword(String matchingPassword) {
         this.matchingPassword = matchingPassword;
+    }
+
+    public boolean getIsDoctor() {
+        return isDoctor;
+    }
+
+    public void setIsDoctor(boolean doctor) {
+        isDoctor = doctor;
     }
 }

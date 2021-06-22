@@ -5,6 +5,7 @@ import com.antont.petclinic.user.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -27,8 +28,18 @@ public class CustomUserService implements UserService {
             throw new UserAlreadyExistException("{exceptions.userAlreadyExist}");
         }
 
-        UserRole role = roleRepository.findByName(UserRoleName.USER.name()).orElseThrow();
+        Optional<UserRole> role = roleRepository.findByName(userDto.getIsDoctor() ? "DOCTOR" : "USER");
 
+        if (role.isPresent()) {
+            User user = initializeUserFromDto(userDto, role.get());
+            userRepository.save(user);
+        }
+
+
+
+    }
+
+    private User initializeUserFromDto(UserDto userDto, UserRole role) {
         User user = new User();
 
         user.setUsername(userDto.getUsername());
@@ -38,7 +49,7 @@ public class CustomUserService implements UserService {
         user.setActive(true);
         encodePassword(userDto, user);
 
-        userRepository.save(user);
+        return user;
     }
 
     @Override

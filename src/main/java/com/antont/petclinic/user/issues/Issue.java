@@ -1,4 +1,4 @@
-package com.antont.petclinic.issues;
+package com.antont.petclinic.user.issues;
 
 import com.antont.petclinic.model.BaseEntity;
 import com.antont.petclinic.pet.Pet;
@@ -47,10 +47,10 @@ public class Issue extends BaseEntity {
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
-    public void setDescription(String password) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
