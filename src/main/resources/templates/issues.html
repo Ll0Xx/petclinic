@@ -24,9 +24,9 @@
                     <div style="display: flex;  margin-top: 2em">
                         <div class="form-group col-6">
                             <select class="form-control" th:field="*{pet}" id="dropOperator" required>
-                                <option value="">Select pet Type</option>
+                                <option value="">Select pet</option>
                                 <option th:each="pet : ${pets}" th:value="${pet.id}"
-                                        th:text="${pet.name} + ', owner: ' + ${pet.owner.username}"></option>
+                                        th:text="${pet.name} + ', owner: ' + ${pet.owner}"></option>
                             </select>
                             <p class="text-danger" th:each="error : ${#fields.errors('pet')}"
                                th:text="${error}">Validation error</p>
@@ -84,12 +84,22 @@
                 <tbody>
                 <tr th:each="issue, iStat : ${issuesPage.content}"
                     th:style="${iStat.odd}? 'font-weight: bold;'"
+                    th:class="'tablerow-' + ${iStat.index}"
                     th:alt-title="${iStat.even}? 'even' : 'odd'">
                     <td th:text="${issue.id}"></td>
                     <td th:text="${issue.pet.name}"></td>
                     <td th:text="${issue.doctor.firstName + ' ' + issue.doctor.lastName }"></td>
                     <td th:text="${issue.description}"></td>
                     <td th:text="${issue.date}"></td>
+                    <td>
+                        <button type="button" class="btn btn-primary"
+                                th:onclick="editPet([[${iStat.index}]], [[${pets}]])">
+                            Edit
+                        </button>
+                        <button type="button" class="btn btn-danger" th:onclick="deletePet([[${issue.id}]])">
+                            Delete
+                        </button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -103,6 +113,11 @@
             </div>
         </div>
     </div>
+
+    <script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper/1.12.3/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.4.1-1/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/issues.js}"></script>
 </div>
 </body>
 </html>

@@ -23,7 +23,7 @@ public class DoctorController {
     @PostMapping("/new")
     @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_ADMIN')")
     public String addNewIssue(@Valid @ModelAttribute IssueDto issueDto) {
-        issuesService.addNewIssue(issueDto);
+        issuesService.add(issueDto);
 
         return "redirect:/issues";
     }

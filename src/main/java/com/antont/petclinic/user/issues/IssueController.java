@@ -1,6 +1,6 @@
 package com.antont.petclinic.user.issues;
 
-import com.antont.petclinic.pet.Pet;
+import com.antont.petclinic.pet.PetResponseModel;
 import com.antont.petclinic.pet.PetService;
 import com.antont.petclinic.user.UserRoleName;
 import org.springframework.data.domain.Page;
@@ -8,6 +8,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/issues")
 public class IssueController {
 
     final private IssuesService issuesService;
@@ -25,7 +28,7 @@ public class IssueController {
         this.petService = petService;
     }
 
-    @GetMapping("/issues")
+    @GetMapping
     public String findPaginated(HttpServletRequest request,
                                 @RequestParam("page") Optional<Integer> page,
                                 @RequestParam("size") Optional<Integer> size,
@@ -39,7 +42,7 @@ public class IssueController {
         String currentSortField = sortField.orElse("id");
         String currentSortDir = sortDir.orElse(Sort.Direction.ASC.name());
 
-        List<Pet> petsList = petService.findAll();
+        List<PetResponseModel> petsList = petService.findAllAsResponseModel();
         model.addAttribute("pets", petsList);
 
         model.addAttribute("currentPage", issuesPage.getPageable().getPageNumber());
@@ -56,5 +59,10 @@ public class IssueController {
         model.addAttribute("issue", new IssueDto());
 
         return "/issues";
+    }
+
+    @PutMapping
+    public String updatePet(){
+        return "";
     }
 }

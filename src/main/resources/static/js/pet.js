@@ -30,7 +30,6 @@ function updatePestRequest() {
 
     const name = $('#editPetName').val();
     const typeId = $('#editPetType').val();
-    const CONTEXT_PATH = $('#contextPathHolder').attr('data-contextPath');
 
     let petRequestModel = {name: name, type: typeId};
 
@@ -38,7 +37,7 @@ function updatePestRequest() {
         type: "PUT",
         contentType: "application/json",
         dataType: 'json',
-        url: CONTEXT_PATH + "api/pets/update?id=" + selectedPetId,
+        url: "api/pets?id=" + selectedPetId,
         data: JSON.stringify(petRequestModel),
         success: function (response) {
             if (response.status === "ok") {
@@ -55,7 +54,7 @@ function updatePestRequest() {
             }
         },
         error: function (e) {
-            alert(e);
+            console.log(`error: ${JSON.stringify(e)}`);
         }
     });
 }
