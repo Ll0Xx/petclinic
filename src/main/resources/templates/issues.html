@@ -4,8 +4,13 @@
 <head>
     <title>User Page</title>
     <div th:replace="fragments/header :: header-css"></div>
+    <link id="contextPathHolder" th:data-contextPath="@{/}"/>
 </head>
 <body>
+
+<script th:inline="javascript">
+    const petsData = [[${pets}]];
+</script>
 
 <div th:replace="fragments/header :: header"></div>
 
@@ -23,7 +28,7 @@
 
                     <div style="display: flex;  margin-top: 2em">
                         <div class="form-group col-6">
-                            <select class="form-control" th:field="*{pet}" id="dropOperator" required>
+                            <select class="form-control" th:field="*{pet}" id="dropOperator">
                                 <option value="">Select pet</option>
                                 <option th:each="pet : ${pets}" th:value="${pet.id}"
                                         th:text="${pet.name} + ', owner: ' + ${pet.owner}"></option>
@@ -34,7 +39,7 @@
 
                         <div class="form-group col-6">
                             <input type="date" name="date" id="date" th:field="*{date}"
-                                   class="form-control input-lg" placeholder="date" required autofocus/>
+                                   class="form-control input-lg" placeholder="date" autofocus/>
                             <p class="text-danger" th:each="error : ${#fields.errors('date')}"
                                th:text="${error}">Validation error</p>
                         </div>
@@ -42,7 +47,7 @@
 
                     <div class="form-group col-12">
                         <textarea name="description" id="description" th:field="*{description}"
-                                  class="form-control input-lg" placeholder="issue description" required
+                                  class="form-control input-lg" placeholder="Issue description"
                                   autofocus></textarea>
                         <p class="text-danger" th:each="error : ${#fields.errors('description')}"
                            th:text="${error}">Validation error</p>
@@ -93,10 +98,11 @@
                     <td th:text="${issue.date}"></td>
                     <td>
                         <button type="button" class="btn btn-primary"
-                                th:onclick="editPet([[${iStat.index}]], [[${pets}]])">
+                                th:onclick="editPet([[${iStat.index}]])">
                             Edit
                         </button>
-                        <button type="button" class="btn btn-danger" th:onclick="deletePet([[${issue.id}]])">
+                        <button type="button" class="btn btn-danger"
+                                th:onclick="deletePet([[${issue.id}]],[[${iStat.index}]])">
                             Delete
                         </button>
                     </td>
