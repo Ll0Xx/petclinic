@@ -96,7 +96,7 @@
                     <td th:text="${issue.doctor.firstName + ' ' + issue.doctor.lastName }"></td>
                     <td th:text="${issue.description}"></td>
                     <td th:text="${issue.date}"></td>
-                    <td>
+                    <td sec:authorize="hasRole('DOCTOR')">
                         <button type="button" class="btn btn-primary"
                                 th:onclick="editPet([[${iStat.index}]])">
                             Edit

@@ -1,7 +1,5 @@
 package com.antont.petclinic.user.issues;
 
-import java.sql.Date;
-
 public class IssueResponseModel {
 
     private int id;
@@ -16,9 +14,9 @@ public class IssueResponseModel {
 
     private String description;
 
-    private Date date;
+    private String date;
 
-    public IssueResponseModel(int id, int petId, String petName, String doctorId, String doctorFullName, String description, Date date) {
+    public IssueResponseModel(int id, int petId, String petName, String doctorId, String doctorFullName, String description, String date) {
         this.id = id;
         this.petId = petId;
         this.petName = petName;
@@ -76,11 +74,11 @@ public class IssueResponseModel {
         this.description = description;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

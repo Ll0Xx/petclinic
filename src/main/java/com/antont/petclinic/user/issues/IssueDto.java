@@ -1,11 +1,10 @@
 package com.antont.petclinic.user.issues;
 
+import com.antont.petclinic.user.issues.validation.DateConstraint;
 import com.antont.petclinic.user.issues.validation.TextConstraint;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.Date;
 
 public class IssueDto {
 
@@ -19,8 +18,8 @@ public class IssueDto {
 
     private String doctor;
 
-    @DateTimeFormat
-    private Date date;
+    @DateConstraint
+    private String date;
 
     public Integer getPet() {
         return pet;
@@ -38,11 +37,11 @@ public class IssueDto {
         this.description = description;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

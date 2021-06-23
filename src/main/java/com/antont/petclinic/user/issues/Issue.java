@@ -25,7 +25,7 @@ public class Issue extends BaseEntity {
     private String description;
 
     @Column(name = "date")
-    private Date date;
+    private String date;
 
     public Issue() {
     }
@@ -54,11 +54,11 @@ public class Issue extends BaseEntity {
         this.description = description;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
