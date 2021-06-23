@@ -56,13 +56,15 @@ public class IssueController {
         List<Integer> pagesNumbers = issuesService.getPagesNumbersList(issuesPage.getTotalPages());
         model.addAttribute("pageNumbers", pagesNumbers);
 
-        model.addAttribute("issue", new IssueDto());
+        if (!model.containsAttribute("issue")) {
+            model.addAttribute("issue", new IssueDto());
+        }
 
         return "/issues";
     }
 
     @PutMapping
-    public String updatePet(){
+    public String updatePet() {
         return "";
     }
 }
