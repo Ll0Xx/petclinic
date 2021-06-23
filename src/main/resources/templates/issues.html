@@ -28,7 +28,7 @@
 
                     <div style="display: flex;  margin-top: 2em">
                         <div class="form-group col-6">
-                            <select class="form-control" th:field="*{pet}" id="dropOperator">
+                            <select class="form-control" th:field="*{pet}" id="dropOperator" required>
                                 <option value="">Select pet</option>
                                 <option th:each="pet : ${pets}" th:value="${pet.id}"
                                         th:text="${pet.name} + ', owner: ' + ${pet.owner}"></option>
@@ -39,7 +39,7 @@
 
                         <div class="form-group col-6">
                             <input type="date" name="date" id="date" th:field="*{date}"
-                                   class="form-control input-lg" placeholder="date" autofocus/>
+                                   class="form-control input-lg" placeholder="date" required autofocus/>
                             <p class="text-danger" th:each="error : ${#fields.errors('date')}"
                                th:text="${error}">Validation error</p>
                         </div>
@@ -48,7 +48,7 @@
                     <div class="form-group col-12">
                         <textarea name="description" id="description" th:field="*{description}"
                                   class="form-control input-lg" placeholder="Issue description"
-                                  autofocus></textarea>
+                                  required autofocus></textarea>
                         <p class="text-danger" th:each="error : ${#fields.errors('description')}"
                            th:text="${error}">Validation error</p>
                     </div>
