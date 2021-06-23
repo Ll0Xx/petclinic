@@ -39,9 +39,13 @@ public class IssuesRestController {
             jsonResponse.setResult(bindingResult.getAllErrors());
             return jsonResponse;
         }
-        id.ifPresent(x -> issuesService.update(x, issueDto));
-        jsonResponse.setStatus("ok");
-        jsonResponse.setResult(issuesService.findById(id.orElseThrow()).orElseThrow().toResponseModel());
+        id.ifPresent(
+                it -> {
+                    issuesService.update(it, issueDto);
+                    jsonResponse.setStatus("ok");
+                    jsonResponse.setResult(issuesService.findById(it).map(Issue::toResponseModel));
+                });
+
         return jsonResponse;
     }
 }
