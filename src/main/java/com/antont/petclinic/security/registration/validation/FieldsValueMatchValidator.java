@@ -1,7 +1,6 @@
 package com.antont.petclinic.security.registration.validation;
 
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.util.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -26,7 +25,7 @@ public class FieldsValueMatchValidator
         try {
             String fieldValue = (String) new BeanWrapperImpl(value).getPropertyValue(field);
             String fieldMatchValue = (String) new BeanWrapperImpl(value).getPropertyValue(fieldMatch);
-            isPasswordsMatch = StringUtils.hasText(fieldValue) && Objects.equals(fieldValue, fieldMatchValue);
+            isPasswordsMatch = Objects.equals(fieldValue, fieldMatchValue);
         } catch (final Exception e) {
             System.out.println(e.getMessage());
         }
