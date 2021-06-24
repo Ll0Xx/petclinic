@@ -19,8 +19,8 @@ public class RestPetsController {
     }
 
     @GetMapping
-    public ResponseEntity<PetResponseModel> editPet(@RequestParam("id") Optional<Integer> id) {
-        return ResponseEntity.of(id.flatMap(petService::findPetResponseModelById));
+    public ResponseEntity<PetResponseModel> getPet(@RequestParam("id") Optional<Integer> id) {
+        return ResponseEntity.of(id.flatMap(petService::findResponseModelById));
     }
 
     @PutMapping

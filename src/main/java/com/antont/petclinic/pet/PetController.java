@@ -30,7 +30,7 @@ public class PetController {
             attr.addFlashAttribute("pet", petDto);
             return "redirect:/user";
         }
-        petService.addPet(petDto);
+        petService.save(petDto);
         return "redirect:/user";
     }
 
@@ -55,7 +55,7 @@ public class PetController {
 
     @PostMapping("/delete")
     public String deletePet(@RequestParam("id") Optional<Integer> id) {
-        id.ifPresent(petService::deletePet);
+        id.ifPresent(petService::delete);
         return "redirect:/user";
     }
 }

@@ -36,11 +36,11 @@ public class PetService {
         return petRepository.findAllByOwner(user);
     }
 
-    public Optional<Pet> findPetById(Integer id) {
+    public Optional<Pet> findById(Integer id) {
         return petRepository.findById(id);
     }
 
-    public Optional<PetResponseModel> findPetResponseModelById(Integer id) {
+    public Optional<PetResponseModel> findResponseModelById(Integer id) {
         return petRepository.findById(id).map(Pet::toResponseModel);
     }
 
@@ -57,13 +57,13 @@ public class PetService {
 
     }
 
-    public void addPet(PetDto petDto) {
+    public void save(PetDto petDto) {
         Optional<User> user = currentUserService.getCurrentUser();
 
         user.ifPresent(it -> {
             Pet pet = new Pet();
             pet.setName(petDto.getName());
-            Integer petTypeId = Integer.valueOf(petDto.getType());
+            Integer petTypeId = petDto.getType();
             PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
             pet.setType(type);
             pet.setOwner(it);
@@ -88,18 +88,7 @@ public class PetService {
         }
     }
 
-    private void savePet(PetDto petDto, User user) {
-        Pet pet = new Pet();
-        pet.setName(petDto.getName());
-        Integer petTypeId = petDto.getType();
-        PetType type = petTypeRepository.findById(petTypeId).orElseThrow();
-        pet.setType(type);
-        pet.setOwner(user);
-
-        petRepository.save(pet);
-    }
-
-    public void deletePet(int petId) {
+    public void delete(int petId) {
         if (petRepository.existsById(petId)) {
             if (isOwnerValid(petId)) {
                 petRepository.deleteById(petId);

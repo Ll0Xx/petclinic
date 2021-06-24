@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -36,7 +35,7 @@ public class IssueController {
                                 @RequestParam("sortDir") Optional<String> sortDir,
                                 Model model) {
         boolean isDoctor = request.isUserInRole(UserRoleName.DOCTOR.name());
-        Page<Issue> issuesPage = issuesService.findPaginatedForDoctor(page, size, sortField, sortDir, isDoctor);
+        Page<Issue> issuesPage = issuesService.findPaginated(page, size, sortField, sortDir, isDoctor);
         model.addAttribute("issuesPage", issuesPage);
 
         String currentSortField = sortField.orElse("id");
@@ -61,10 +60,5 @@ public class IssueController {
         }
 
         return "/issues";
-    }
-
-    @PutMapping
-    public String updatePet() {
-        return "";
     }
 }

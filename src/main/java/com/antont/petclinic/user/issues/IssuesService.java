@@ -36,8 +36,8 @@ public class IssuesService {
         return issuesRepository.findById(id);
     }
 
-    public Page<Issue> findPaginatedForDoctor(Optional<Integer> page, Optional<Integer> size, Optional<String> sortField,
-                                              Optional<String> sortDir, boolean isDoctor) {
+    public Page<Issue> findPaginated(Optional<Integer> page, Optional<Integer> size, Optional<String> sortField,
+                                     Optional<String> sortDir, boolean isDoctor) {
         Optional<User> user = currentUserService.getCurrentUser();
 
         int currentPage = page.orElse(PAGE_START_NUMBER);
