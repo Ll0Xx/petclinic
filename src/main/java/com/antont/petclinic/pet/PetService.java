@@ -30,22 +30,8 @@ public class PetService {
         this.petTypeRepository = roleRepository;
     }
 
-    public List<Pet> findAllByOwner(Pageable pageable) {
-        Optional<User> user = currentUserService.getCurrentUser();
-
-        return petRepository.findAllByOwner(user);
-    }
-
-    public Optional<Pet> findById(Integer id) {
-        return petRepository.findById(id);
-    }
-
     public Optional<PetResponseModel> findResponseModelById(Integer id) {
         return petRepository.findById(id).map(Pet::toResponseModel);
-    }
-
-    public List<Pet> findAll() {
-        return petRepository.findAll();
     }
 
     public List<PetResponseModel> findAllAsResponseModel() {
@@ -123,19 +109,11 @@ public class PetService {
         int pageSize = size.orElse(PAGE_SIZE);
 
         Optional<User> user = currentUserService.getCurrentUser();
-        List<Pet> pets = petRepository.findAllByOwner(user);
+        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        List<Pet> pets = petRepository.findAllByOwner(user, pageable);
+        long totalCount = petRepository.countByOwner(user);
 
-        int startItem = currentPage * pageSize;
-        List<Pet> list;
-
-        if (pets.size() < startItem) {
-            list = pets;
-        } else {
-            int toIndex = Math.min(startItem + pageSize, pets.size());
-            list = pets.subList(startItem, toIndex);
-        }
-
-        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), pets.size());
+        return new PageImpl<>(pets, pageable, totalCount);
     }
 
     /**
